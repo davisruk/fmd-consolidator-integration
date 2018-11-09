@@ -1,0 +1,64 @@
+buildscript {
+	ext {
+		springBootVersion = '2.1.0.RELEASE'
+	}
+	repositories {
+		mavenCentral()
+		
+		// palantir docker plugin not in spring or maven repos
+		maven {
+			url "https://plugins.gradle.org/m2/"
+		}
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+		classpath("gradle.plugin.com.palantir.gradle.docker:gradle-docker:0.20.1")
+	}
+}
+
+group = 'davisruk'
+
+apply plugin: 'java'
+apply plugin: 'eclipse-wtp'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'war'
+apply plugin: 'com.palantir.docker'
+
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = 1.8
+
+repositories {
+	mavenCentral()
+}
+
+configurations {
+	providedRuntime
+}
+
+task unpack(type: Copy) {
+    dependsOn bootJar
+    from(zipTree(tasks.bootJar.outputs.files.singleFile))
+    into("build/dependency")
+}
+
+docker {
+    name "${project.group}/${bootJar.baseName}:${version}"
+    copySpec.from(tasks.unpack.outputs).into("dependency")
+    buildArgs(['DEPENDENCY': "dependency"])	
+}
+
+dependencies {
+	implementation('org.springframework.boot:spring-boot-starter-web')
+	implementation('org.springframework.boot:spring-boot-starter-data-jpa')	
+	implementation('org.apache.camel:camel-spring-boot-starter:2.22.1')
+	implementation('org.apache.camel:camel-swagger-java-starter:2.22.1')
+	implementation('org.apache.camel:camel-servlet-starter:2.22.1')
+	implementation('org.apache.camel:camel-jackson-starter:2.22.1')
+	implementation('org.apache.camel:camel-jpa:2.22.1')
+	implementation('org.apache.camel:camel-sql:2.22.1')
+	compileOnly('org.projectlombok:lombok:1.18.4')
+	providedRuntime('org.springframework.boot:spring-boot-starter-tomcat')
+	providedRuntime('com.h2database:h2')
+	testImplementation('org.springframework.boot:spring-boot-starter-test')
+}
