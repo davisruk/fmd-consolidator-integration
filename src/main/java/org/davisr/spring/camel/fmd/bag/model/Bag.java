@@ -5,9 +5,13 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,14 +22,18 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @Data
-@Entity(name="BAG")
+@Entity
+@Table(name="BAG")
 public class Bag {
 	@Id @GeneratedValue @Column(name="ID")
 	private Integer id;
 
 	@Column (name="LABEL_CODE")
 	private String labelCode;
-
-	@OneToMany(mappedBy = "bag", cascade = CascadeType.ALL, orphanRemoval = true)
+	
+	// Prevent infinite recursion for JSON serialization
+	// NOTE - for 1 side of 1:M you have to specify the class name of the property in the child, not the property name!!
+	@JsonIgnoreProperties("Bag")
+	@OneToMany( fetch=FetchType.EAGER, mappedBy = "bag", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Pack> packs;
 }

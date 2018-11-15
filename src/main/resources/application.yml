@@ -6,7 +6,7 @@ camel:
 management:
   port: 8081
 endpoints:
-  enabled: false
+  enabled: true
   health:
     enabled: true
  

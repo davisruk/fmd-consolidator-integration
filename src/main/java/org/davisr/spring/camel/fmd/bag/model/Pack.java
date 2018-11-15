@@ -4,16 +4,14 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
+import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,14 +22,17 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @Data
-@Entity(name="PACK")
+@Entity
+@Table(name="PACK")
 public class Pack {
 	@Id @GeneratedValue @Column(name="ID")	
 	private Integer id;
 	
-	@Fetch(FetchMode.JOIN)
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne
 	@JoinColumn(name = "BAG_ID")
+	// Prevent infinite recursion for JSON serialization
+	// For many side of reference you have to use the parent's property name
+	@JsonIgnoreProperties("packs")	
 	private Bag bag;
 
 	@Column(name = "GTIN")
@@ -49,4 +50,12 @@ public class Pack {
 	
 	@Column(name = "DECOMMISSIONED")
 	private boolean decommissioned;
+	
+	public Bag setShallowBag (Bag b) {
+		this.bag = Bag.builder()
+						.id(b.getId())
+						.labelCode(b.getLabelCode())
+						.build();
+		return this.bag;
+	}
 }

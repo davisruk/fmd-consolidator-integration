@@ -55,8 +55,6 @@ dependencies {
 	implementation('org.apache.camel:camel-swagger-java-starter:2.22.1')
 	implementation('org.apache.camel:camel-servlet-starter:2.22.1')
 	implementation('org.apache.camel:camel-jackson-starter:2.22.1')
-	implementation('org.apache.camel:camel-jpa:2.22.1')
-	implementation('org.apache.camel:camel-sql:2.22.1')
 	compileOnly('org.projectlombok:lombok:1.18.4')
 	providedRuntime('org.springframework.boot:spring-boot-starter-tomcat')
 	providedRuntime('com.h2database:h2')

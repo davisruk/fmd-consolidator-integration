@@ -28,20 +28,40 @@ public class BagRoutes extends RouteBuilder {
 			.bindingMode(RestBindingMode.auto);
 
     	rest("/bags")
-		.post()
-			.type(Bag.class)
-			.to("direct:createBag")
-		.get("/{id}")
-			.outType(Bag.class)
-			.to("direct:getBag");
+			.post()
+				.type(Bag.class)
+				.to("direct:createBag")
+			.get("/{id}")
+				.to("direct:getBagById")
+	    	.get()
+				.to("direct:getAllBags");				
     
-    	from("direct:createBag")
-    		.to("jpa:org.davisruk.spring.camel.fmd.bag.model.Bag");
+    	rest("/packs")
+			.get("/{id}")
+			.to("direct:getPackById")
+	    	.get()
+			.to("direct:getAllPacks");				
+
     	
-    	from("direct:getBag")
-			.to("sql:select * from BAG join PACK where BAG.id = :#${header.id}?dataSource=dataSource&outputType=SelectList")
-			.bean("bagTransformer", "mapBag");
-	
+    	from("direct:createBag")
+    		.routeId("createBag")
+    		.bean("bagDbService", "saveBag");
+    	
+    	from("direct:getBagById")
+			.routeId("getBagById")
+			.bean("bagDbService", "getBagById(${header.id})");
+
+    	from("direct:getAllBags")
+			.routeId("getAllBags")
+			.bean("bagDbService", "getAllBags");
+    	
+    	from("direct:getPackById")
+			.routeId("getPackById")
+			.bean("packDbService", "getPackById(${header.id})");
+    	
+    	from("direct:getAllPacks")
+			.routeId("getAllPacks")
+			.bean("packDbService", "getAllPacks");
 	}
 
 }
