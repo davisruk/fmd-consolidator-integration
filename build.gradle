@@ -1,6 +1,7 @@
 buildscript {
 	ext {
 		springBootVersion = '2.1.0.RELEASE'
+		camelVersion = '2.22.2'
 	}
 	repositories {
 		mavenCentral()
@@ -13,6 +14,7 @@ buildscript {
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
 		classpath("gradle.plugin.com.palantir.gradle.docker:gradle-docker:0.20.1")
+		classpath("no.nils:wsdl2java:0.10")
 	}
 }
 
@@ -24,6 +26,7 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'war'
 apply plugin: 'com.palantir.docker'
+apply plugin :'no.nils.wsdl2java'
 
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
@@ -48,15 +51,32 @@ docker {
     buildArgs(['DEPENDENCY': "dependency"])	
 }
 
+wsdl2java{
+    wsdlsToGenerate = [
+            ['-p','org.davisr.spring.camel.nmvs', '-autoNameResolution',"$projectDir/src/main/resources/WS_SINGLE_PACK.wsdl"]
+    ]
+    generatedWsdlDir = file("$projectDir/generatedsources")
+    wsdlDir = file("$projectDir/src/main/resources/")
+    locale = Locale.UK
+}
+
+wsdl2javaExt {
+    cxfVersion = "3.2.7"
+}
+
+compileJava.dependsOn wsdl2java
+
 dependencies {
 	implementation('org.springframework.boot:spring-boot-starter-web')
 	implementation('org.springframework.boot:spring-boot-starter-data-jpa')	
-	implementation('org.apache.camel:camel-spring-boot-starter:2.22.1')
-	implementation('org.apache.camel:camel-swagger-java-starter:2.22.1')
-	implementation('org.apache.camel:camel-servlet-starter:2.22.1')
-	implementation('org.apache.camel:camel-jackson-starter:2.22.1')
+	implementation("org.apache.camel:camel-spring-boot-starter:${camelVersion}")
+	implementation("org.apache.camel:camel-swagger-java-starter:${camelVersion}")
+	implementation("org.apache.camel:camel-servlet-starter:${camelVersion}")
+	implementation("org.apache.camel:camel-jackson-starter:${camelVersion}")
+	implementation("org.apache.camel:camel-cxf:${camelVersion}")
 	compileOnly('org.projectlombok:lombok:1.18.4')
 	providedRuntime('org.springframework.boot:spring-boot-starter-tomcat')
 	providedRuntime('com.h2database:h2')
 	testImplementation('org.springframework.boot:spring-boot-starter-test')
 }
+

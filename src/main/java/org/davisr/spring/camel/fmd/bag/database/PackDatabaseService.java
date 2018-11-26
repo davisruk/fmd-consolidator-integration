@@ -1,7 +1,5 @@
 package org.davisr.spring.camel.fmd.bag.database;
 
-import java.util.Optional;
-
 import org.davisr.spring.camel.fmd.bag.model.Pack;
 import org.davisr.spring.camel.fmd.bag.repo.PackRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +10,8 @@ public class PackDatabaseService {
 	@Autowired
 	PackRepository packRepo;
 	
-	public Optional<Pack> getPackById(Integer id) {
-		return packRepo.findById(id);
+	public Pack getPackById(Integer id) {
+		return packRepo.findById(id).orElse(null);
 	}
 	
 	public PackSearchResults getAllPacks() {
