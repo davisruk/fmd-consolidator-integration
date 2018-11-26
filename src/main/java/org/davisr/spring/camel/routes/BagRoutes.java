@@ -1,23 +1,20 @@
 package org.davisr.spring.camel.routes;
 
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLSession;
-
 import org.apache.camel.CamelContext;
+import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.cxf.CxfEndpoint;
 import org.apache.camel.component.cxf.CxfEndpointConfigurer;
 import org.apache.camel.model.rest.RestBindingMode;
 import org.apache.camel.util.jsse.KeyManagersParameters;
 import org.apache.camel.util.jsse.KeyStoreParameters;
-import org.apache.camel.util.jsse.TrustManagersParameters;
 import org.apache.cxf.configuration.jsse.TLSClientParameters;
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.endpoint.Server;
 import org.apache.cxf.frontend.AbstractWSDLBasedEndpointFactory;
 import org.apache.cxf.transport.http.HTTPConduit;
-import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 import org.davisr.spring.camel.fmd.bag.model.Bag;
+import org.davisr.spring.camel.fmd.nmvs.response.FMDResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -43,7 +40,7 @@ public class BagRoutes extends RouteBuilder {
 			.apiProperty("api.version", "v1")
 			.apiContextRouteId("doc-api")
 			.component("servlet")
-			.bindingMode(RestBindingMode.auto);
+			.bindingMode(RestBindingMode.json);
 
     	rest("/bags")
 			.post()
@@ -56,13 +53,15 @@ public class BagRoutes extends RouteBuilder {
     
     	rest("/packs")
 			.get("/{id}")
-			.to("direct:getPackById")
+				.to("direct:getPackById")
 	    	.get()
-			.to("direct:getAllPacks");				
+				.to("direct:getAllPacks");				
 
     	rest("/dispense")
     		.get("/{id}")
+    			.outType(FMDResponse.class)
     			.to("direct:dispenseBag");
+
     	
     	from("direct:createBag")
     		.routeId("createBag")
@@ -92,7 +91,9 @@ public class BagRoutes extends RouteBuilder {
     		.setHeader("operationName", constant("G110Verify"))
     		.setHeader("operationNamespace", constant("urn:services.nmvs.eu:v2.0"))
     		.to(fmdEndPoint(getContext()))
-    		.log("The response was ${body[0]}");
+    		.bean("singlePackResponseBuilder", "buildG110Response")
+    		.setHeader(Exchange.CONTENT_TYPE, constant("application/json"));
+    		//.log("The response was ${body[0]}");
     	
 	}
 
@@ -116,35 +117,24 @@ public class BagRoutes extends RouteBuilder {
 			@Override
 			public void configureClient(Client client) {
 	            HTTPConduit conduit = (HTTPConduit) client.getConduit();
-                HTTPClientPolicy policy = new HTTPClientPolicy();
+                /*
+	            HTTPClientPolicy policy = new HTTPClientPolicy();
                 policy.setProxyServer("gateway.zscalertwo.net");
                 policy.setProxyServerPort(9480);
                 conduit.setClient(policy);
-                TLSClientParameters tls = new TLSClientParameters();
-
-                KeyStoreParameters keyStoreParameters = new KeyStoreParameters();
-                keyStoreParameters.setResource(keyStore);
-                //keyStoreParameters.setResource("C:\\Java\\jdk\\1.8.0_162\\jre\\lib\\security\\cacerts");
-                keyStoreParameters.setPassword("changeit");
-                keyStoreParameters.setType("JKS");
-
-                KeyManagersParameters keyManagersParameters = new KeyManagersParameters();
-                keyManagersParameters.setKeyStore(keyStoreParameters);
-                keyManagersParameters.setKeyPassword("wmD6xw1u");
-
-                TrustManagersParameters trustManagersParameters = new TrustManagersParameters();
-                trustManagersParameters.setKeyStore(keyStoreParameters);
-                tls.setHostnameVerifier(new HostnameVerifier() {
-                    @Override
-                    public boolean verify(String s, SSLSession sslSession) {
-                        return true;
-                    }
-                });
-                tls.setDisableCNCheck(true);
-                
+                */
                 try {
-	                tls.setKeyManagers(keyManagersParameters.createKeyManagers());
-	                tls.setTrustManagers(trustManagersParameters.createTrustManagers());
+                    TLSClientParameters tls = new TLSClientParameters();
+
+                    KeyStoreParameters keyStoreParameters = new KeyStoreParameters();
+                    keyStoreParameters.setResource(keyStore);
+                    keyStoreParameters.setPassword("wmD6xw1u");
+                    keyStoreParameters.setType("PKCS12");
+
+                    KeyManagersParameters keyManagersParameters = new KeyManagersParameters();
+                    keyManagersParameters.setKeyStore(keyStoreParameters);
+                    keyManagersParameters.setKeyPassword("wmD6xw1u");
+                	tls.setKeyManagers(keyManagersParameters.createKeyManagers());
 	                conduit.setTlsClientParameters(tls);
                 } catch (Exception e) {
                 	e.printStackTrace();
