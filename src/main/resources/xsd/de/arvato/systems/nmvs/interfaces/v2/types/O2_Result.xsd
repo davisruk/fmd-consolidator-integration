@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns="urn:types.nmvs.eu:v2.0"
+		targetNamespace="urn:types.nmvs.eu:v2.0" elementFormDefault="qualified"
+		attributeFormDefault="qualified">
+	<include schemaLocation="NMVS_Composite_Types.xsd"/>
+	<element name="O2_Bulk" type="tns:O2_Bulk_Type" />
+	
+	<complexType name="O2_Bulk_Type">
+		<sequence>
+			<element name="Header" type="tns:HeaderResponse_Type" minOccurs="1" maxOccurs="1" />
+			<element name="Body" type="tns:O2_BulkBody_Type" minOccurs="1" maxOccurs="1" />
+		</sequence>
+	</complexType>
+	
+	<complexType name="O2_BulkBody_Type">
+		<sequence>
+			<element name="ReturnCode" type="tns:ReturnCode_Type" minOccurs="1" maxOccurs="1" />
+		</sequence>
+	</complexType>
+	
+</schema>	

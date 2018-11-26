@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns="urn:types.nmvs.eu:v2.0" targetNamespace="urn:types.nmvs.eu:v2.0" elementFormDefault="qualified" attributeFormDefault="qualified">
+	<include schemaLocation="NMVS_Composite_Types.xsd" />
+	<element name="O7_TestData" type="tns:O7_TestData_Type" />
+
+	<complexType name="O7_TestData_Type">
+		<sequence>
+			<element name="Header" type="tns:HeaderResponse_Type" minOccurs="1" maxOccurs="1" />
+			<element name="TransactionData" type="tns:TestDataResponseTransactionData_Type" minOccurs="1" maxOccurs="1" />
+		</sequence>
+	</complexType>
+	
+	
+	<complexType name="TestDataResponseTransactionData_Type">
+        <sequence>
+            <element name="Packs" minOccurs="0" maxOccurs="1" >
+                <complexType>
+                    <sequence>
+                        <element name="Pack" minOccurs="1" maxOccurs="1">
+                            <complexType>
+                                <attribute name="sn" type="tns:SN_Type"/>
+                            </complexType>
+                        </element>
+                    </sequence>
+                </complexType>          
+            </element>
+            <element name="ReturnCode" type="tns:ReturnCode_Type" minOccurs="1" maxOccurs="1" />
+        </sequence>
+    </complexType>
+</schema>	

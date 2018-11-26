@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns="urn:types.nmvs.eu:v2.0" 
+	targetNamespace="urn:types.nmvs.eu:v2.0" elementFormDefault="qualified" 
+	attributeFormDefault="qualified">
+	<include schemaLocation="NMVS_Composite_Types.xsd" />
+	<element name="I8_MixedBulk" type="tns:I8_MixedBulk_Type" />
+
+	<complexType name="I8_MixedBulk_Type">
+	<complexContent>
+			<extension base="tns:Header_Type">
+				<sequence>
+			         <element name="Body" type="tns:RequestMixedBulkData_Type" minOccurs="1" maxOccurs="1" />
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+    
+     <complexType name="MixedSingle_Type">
+        <complexContent>
+            <extension base="tns:RequestData_Type">
+	            <sequence>
+	                <element name="Transaction" type="tns:MixedBulkRequestTransaction_Type"/>
+	            </sequence>
+	             <attribute name="reqType" type="tns:CatalogUseCaseMixed_Type" use="required"/>
+            </extension>
+        </complexContent>
+    </complexType>
+
+     <complexType name="MixedSingleManual_Type">
+        <complexContent>
+            <extension base="tns:ManualRequestData_Type">
+                <sequence>
+                    <element name="Transaction" type="tns:MixedBulkRequestTransaction_Type"/>
+                </sequence>
+                <attribute name="reqType" type="tns:CatalogUseCaseMixedManual_Type" use="required"/>
+            </extension>
+        </complexContent>
+    </complexType>
+
+    <complexType name="RequestMixedBulkData_Type">
+        <sequence>
+          <element name="TrxList">
+              <complexType>
+                  <sequence>
+	                  <element name="TrxItem" minOccurs="1" maxOccurs="100000">
+		                  <complexType>        
+			                  <choice >
+			                      <element name="Item" type="tns:MixedSingle_Type" minOccurs="1" maxOccurs="1"/>
+			                      <element name="ItemMan" type="tns:MixedSingleManual_Type" minOccurs="1" maxOccurs="1"/>
+			                  </choice>
+		                  </complexType>
+	                  </element>
+                  </sequence>
+              </complexType>
+          </element>
+        </sequence>
+    </complexType>
+</schema>	

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns="urn:types.nmvs.eu:v2.0"
+	targetNamespace="urn:types.nmvs.eu:v2.0" elementFormDefault="qualified"
+	attributeFormDefault="qualified">
+	<include schemaLocation="NMVS_Composite_Types.xsd" />
+	<element name="I2_ManualSinglePack" type="tns:I2_ManualSinglePack_Type" />
+
+	<complexType name="I2_ManualSinglePack_Type">
+		<complexContent>
+			<extension base="tns:Header_Type">
+				<sequence>
+					<element name="Body" type="tns:ManualRequestData_Type"
+						minOccurs="1" maxOccurs="1" />
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+
+</schema>	

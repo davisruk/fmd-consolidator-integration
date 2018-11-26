@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns="urn:types.nmvs.eu:v2.0"
+	targetNamespace="urn:types.nmvs.eu:v2.0" elementFormDefault="qualified"
+	attributeFormDefault="qualified">
+	<include schemaLocation="NMVS_Composite_Types.xsd" />
+	<element name="I9_DownloadMasterdata" type="tns:I9_DownloadMasterdata_Type" />
+
+	<complexType name="I9_DownloadMasterdata_Type">
+		<complexContent>
+			<extension base="tns:Header_Type">
+				<sequence>
+					<element name="Body"
+						type="tns:I9_DownloadMasterdataTransactionData_Type" minOccurs="1"
+						maxOccurs="1" />
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="I9_DownloadMasterdataTransactionData_Type">
+		<sequence>
+			<element name="ProductCodeList">
+				<complexType>
+					<sequence>
+						<element name="ProductCode" type="tns:ProductIdentifier_Type"
+							minOccurs="0" maxOccurs="1000">
+							<annotation>
+								<documentation>Transaction-Id of calling system</documentation>
+							</annotation>
+						</element>
+					</sequence>
+				</complexType>
+			</element>
+		</sequence>
+	</complexType>
+
+</schema>	

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns="urn:types.nmvs.eu:v2.0"
+    targetNamespace="urn:types.nmvs.eu:v2.0" elementFormDefault="qualified"
+    attributeFormDefault="qualified">
+    <include schemaLocation="NMVS_Composite_Types.xsd"/>
+    <element name="O10_DownloadCert" type="tns:O10_DownloadCert_Type" />
+    
+    <complexType name="O10_DownloadCert_Type">
+        <sequence>
+            <element name="Header" type="tns:HeaderResponse_Type" minOccurs="1" maxOccurs="1" />
+            <element name="Body" type="tns:O10_DownloadCertBody_Type" minOccurs="1" maxOccurs="1" />
+        </sequence>
+    </complexType>    
+    
+    <complexType name="O10_DownloadCertBody_Type">
+        <sequence>
+            <element name="Cert" type="tns:Cert_Type" minOccurs="0" maxOccurs="1" />
+            <element name="ReturnCode" type="tns:ReturnCode_Type" minOccurs="1" maxOccurs="1" />
+        </sequence>
+    </complexType>
+    
+</schema>   

@@ -1,0 +1,625 @@
+<wsdl:definitions 
+    name="SinglePackServices" 
+    targetNamespace="urn:services.nmvs.eu:v2.0"
+    xmlns:ns="urn:services.nmvs.eu:v2.0"    
+    xmlns:env="urn:wsdltypes.nmvs.eu:v2.0" 
+    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
+    xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/"
+    xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" >
+    
+   <wsdl:types>
+      <xs:schema targetNamespace="urn:wsdltypes.nmvs.eu:v2.0" xmlns:types="urn:types.nmvs.eu:v2.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+         <xs:import namespace="urn:types.nmvs.eu:v2.0" schemaLocation="./xsd/de/arvato/systems/nmvs/interfaces/v2/types/I1_SinglePack.xsd"/>
+         <xs:import namespace="urn:types.nmvs.eu:v2.0" schemaLocation="./xsd/de/arvato/systems/nmvs/interfaces/v2/types/I2_ManualSinglePack.xsd"/>
+         <xs:import namespace="urn:types.nmvs.eu:v2.0" schemaLocation="./xsd/de/arvato/systems/nmvs/interfaces/v2/types/I3_UndoSinglePack.xsd"/>
+         <xs:import namespace="urn:types.nmvs.eu:v2.0" schemaLocation="./xsd/de/arvato/systems/nmvs/interfaces/v2/types/O1_SinglePack.xsd"/>
+         <xs:element name="SinglePackPingRequest">
+            <xs:complexType>
+               <xs:complexContent>
+                  <xs:extension base="types:PingRequest"/>
+               </xs:complexContent>
+            </xs:complexType>
+         </xs:element>
+         <xs:element name="SinglePackPingResponse">
+            <xs:complexType>
+               <xs:complexContent>
+                  <xs:extension base="types:PingResponse"/>
+               </xs:complexContent>
+            </xs:complexType>
+         </xs:element>
+         <xs:element name="G110Request">
+            <xs:complexType>
+               <xs:complexContent>
+                  <xs:extension base="types:I1_SinglePack_Type"/>
+               </xs:complexContent>
+            </xs:complexType>
+         </xs:element>
+         <xs:element name="G110Response">
+            <xs:complexType>
+               <xs:complexContent>
+                  <xs:extension base="types:O1_SinglePack_Type"/>
+               </xs:complexContent>
+            </xs:complexType>
+         </xs:element>
+         <xs:element name="G120Request">
+            <xs:complexType>
+               <xs:complexContent>
+                  <xs:extension base="types:I1_SinglePack_Type"/>
+               </xs:complexContent>
+            </xs:complexType>
+         </xs:element>
+         <xs:element name="G120Response">
+            <xs:complexType>
+               <xs:complexContent>
+                  <xs:extension base="types:O1_SinglePack_Type"/>
+               </xs:complexContent>
+            </xs:complexType>
+         </xs:element>
+         <xs:element name="G121Request">
+            <xs:complexType>
+               <xs:complexContent>
+                  <xs:extension base="types:I3_UndoSinglePack_Type"/>
+               </xs:complexContent>
+            </xs:complexType>
+         </xs:element>
+         <xs:element name="G121Response">
+            <xs:complexType>
+               <xs:complexContent>
+                  <xs:extension base="types:O1_SinglePack_Type"/>
+               </xs:complexContent>
+            </xs:complexType>
+         </xs:element>
+         <xs:element name="G122Request">
+            <xs:complexType>
+               <xs:complexContent>
+                  <xs:extension base="types:I2_ManualSinglePack_Type"/>
+               </xs:complexContent>
+            </xs:complexType>
+         </xs:element>
+         <xs:element name="G122Response">
+            <xs:complexType>
+               <xs:complexContent>
+                  <xs:extension base="types:O1_SinglePack_Type"/>
+               </xs:complexContent>
+            </xs:complexType>
+         </xs:element>
+         <xs:element name="G130Request">
+            <xs:complexType>
+               <xs:complexContent>
+                  <xs:extension base="types:I1_SinglePack_Type"/>
+               </xs:complexContent>
+            </xs:complexType>
+         </xs:element>
+         <xs:element name="G130Response">
+            <xs:complexType>
+               <xs:complexContent>
+                  <xs:extension base="types:O1_SinglePack_Type"/>
+               </xs:complexContent>
+            </xs:complexType>
+         </xs:element>
+         <xs:element name="G131Request">
+            <xs:complexType>
+               <xs:complexContent>
+                  <xs:extension base="types:I3_UndoSinglePack_Type"/>
+               </xs:complexContent>
+            </xs:complexType>
+         </xs:element>
+         <xs:element name="G131Response">
+            <xs:complexType>
+               <xs:complexContent>
+                  <xs:extension base="types:O1_SinglePack_Type"/>
+               </xs:complexContent>
+            </xs:complexType>
+         </xs:element>
+         <xs:element name="G140Request">
+            <xs:complexType>
+               <xs:complexContent>
+                  <xs:extension base="types:I1_SinglePack_Type"/>
+               </xs:complexContent>
+            </xs:complexType>
+         </xs:element>
+         <xs:element name="G140Response">
+            <xs:complexType>
+               <xs:complexContent>
+                  <xs:extension base="types:O1_SinglePack_Type"/>
+               </xs:complexContent>
+            </xs:complexType>
+         </xs:element>
+         <xs:element name="G141Request">
+            <xs:complexType>
+               <xs:complexContent>
+                  <xs:extension base="types:I3_UndoSinglePack_Type"/>
+               </xs:complexContent>
+            </xs:complexType>
+         </xs:element>
+         <xs:element name="G141Response">
+            <xs:complexType>
+               <xs:complexContent>
+                  <xs:extension base="types:O1_SinglePack_Type"/>
+               </xs:complexContent>
+            </xs:complexType>
+         </xs:element>
+         <xs:element name="G150Request">
+            <xs:complexType>
+               <xs:complexContent>
+                  <xs:extension base="types:I1_SinglePack_Type"/>
+               </xs:complexContent>
+            </xs:complexType>
+         </xs:element>
+         <xs:element name="G150Response">
+            <xs:complexType>
+               <xs:complexContent>
+                  <xs:extension base="types:O1_SinglePack_Type"/>
+               </xs:complexContent>
+            </xs:complexType>
+         </xs:element>
+         <xs:element name="G151Request">
+            <xs:complexType>
+               <xs:complexContent>
+                  <xs:extension base="types:I3_UndoSinglePack_Type"/>
+               </xs:complexContent>
+            </xs:complexType>
+         </xs:element>
+         <xs:element name="G151Response">
+            <xs:complexType>
+               <xs:complexContent>
+                  <xs:extension base="types:O1_SinglePack_Type"/>
+               </xs:complexContent>
+            </xs:complexType>
+         </xs:element>
+         <xs:element name="G160Request">
+            <xs:complexType>
+               <xs:complexContent>
+                  <xs:extension base="types:I1_SinglePack_Type"/>
+               </xs:complexContent>
+            </xs:complexType>
+         </xs:element>
+         <xs:element name="G160Response">
+            <xs:complexType>
+               <xs:complexContent>
+                  <xs:extension base="types:O1_SinglePack_Type"/>
+               </xs:complexContent>
+            </xs:complexType>
+         </xs:element>
+         <xs:element name="G161Request">
+            <xs:complexType>
+               <xs:complexContent>
+                  <xs:extension base="types:I3_UndoSinglePack_Type"/>
+               </xs:complexContent>
+            </xs:complexType>
+         </xs:element>
+         <xs:element name="G161Response">
+            <xs:complexType>
+               <xs:complexContent>
+                  <xs:extension base="types:O1_SinglePack_Type"/>
+               </xs:complexContent>
+            </xs:complexType>
+         </xs:element>
+         <xs:element name="G170Request">
+            <xs:complexType>
+               <xs:complexContent>
+                  <xs:extension base="types:I1_SinglePack_Type"/>
+               </xs:complexContent>
+            </xs:complexType>
+         </xs:element>
+         <xs:element name="G170Response">
+            <xs:complexType>
+               <xs:complexContent>
+                  <xs:extension base="types:O1_SinglePack_Type"/>
+               </xs:complexContent>
+            </xs:complexType>
+         </xs:element>
+         <xs:element name="G171Request">
+            <xs:complexType>
+               <xs:complexContent>
+                  <xs:extension base="types:I3_UndoSinglePack_Type"/>
+               </xs:complexContent>
+            </xs:complexType>
+         </xs:element>
+         <xs:element name="G171Response">
+            <xs:complexType>
+               <xs:complexContent>
+                  <xs:extension base="types:O1_SinglePack_Type"/>
+               </xs:complexContent>
+            </xs:complexType>
+         </xs:element>
+         <xs:element name="G180Request">
+            <xs:complexType>
+               <xs:complexContent>
+                  <xs:extension base="types:I1_SinglePack_Type"/>
+               </xs:complexContent>
+            </xs:complexType>
+         </xs:element>
+         <xs:element name="G180Response">
+            <xs:complexType>
+               <xs:complexContent>
+                  <xs:extension base="types:O1_SinglePack_Type"/>
+               </xs:complexContent>
+            </xs:complexType>
+         </xs:element>
+         <xs:element name="G181Request">
+            <xs:complexType>
+               <xs:complexContent>
+                  <xs:extension base="types:I3_UndoSinglePack_Type"/>
+               </xs:complexContent>
+            </xs:complexType>
+         </xs:element>
+         <xs:element name="G181Response">
+            <xs:complexType>
+               <xs:complexContent>
+                  <xs:extension base="types:O1_SinglePack_Type"/>
+               </xs:complexContent>
+            </xs:complexType>
+         </xs:element>
+         <xs:element name="G182Request">
+            <xs:complexType>
+               <xs:complexContent>
+                  <xs:extension base="types:I2_ManualSinglePack_Type"/>
+               </xs:complexContent>
+            </xs:complexType>
+         </xs:element>
+         <xs:element name="G182Response">
+            <xs:complexType>
+               <xs:complexContent>
+                  <xs:extension base="types:O1_SinglePack_Type"/>
+               </xs:complexContent>
+            </xs:complexType>
+         </xs:element>
+      </xs:schema>
+   </wsdl:types>
+   
+   <wsdl:message name="PingRequestMessage">
+      <wsdl:part name="messageParameters" element="env:SinglePackPingRequest"/>
+   </wsdl:message>
+   <wsdl:message name="PingResponseMessage">
+      <wsdl:part name="messageParameters" element="env:SinglePackPingResponse"/>
+   </wsdl:message>
+   <wsdl:message name="G110RequestMessage">
+      <wsdl:part name="messageParameters" element="env:G110Request"/>
+   </wsdl:message>
+   <wsdl:message name="G110ResponseMessage">
+      <wsdl:part name="messageParameters" element="env:G110Response"/>
+   </wsdl:message>
+   <wsdl:message name="G120RequestMessage">
+      <wsdl:part name="messageParameters" element="env:G120Request"/>
+   </wsdl:message>
+   <wsdl:message name="G120ResponseMessage">
+      <wsdl:part name="messageParameters" element="env:G120Response"/>
+   </wsdl:message>
+   <wsdl:message name="G121RequestMessage">
+      <wsdl:part name="messageParameters" element="env:G121Request"/>
+   </wsdl:message>
+   <wsdl:message name="G121ResponseMessage">
+      <wsdl:part name="messageParameters" element="env:G121Response"/>
+   </wsdl:message>
+   <wsdl:message name="G122RequestMessage">
+      <wsdl:part name="messageParameters" element="env:G122Request"/>
+   </wsdl:message>
+   <wsdl:message name="G122ResponseMessage">
+      <wsdl:part name="messageParameters" element="env:G122Response"/>
+   </wsdl:message>
+   <wsdl:message name="G130RequestMessage">
+      <wsdl:part name="messageParameters" element="env:G130Request"/>
+   </wsdl:message>
+   <wsdl:message name="G130ResponseMessage">
+      <wsdl:part name="messageParameters" element="env:G130Response"/>
+   </wsdl:message>
+   <wsdl:message name="G131RequestMessage">
+      <wsdl:part name="messageParameters" element="env:G131Request"/>
+   </wsdl:message>
+   <wsdl:message name="G131ResponseMessage">
+      <wsdl:part name="messageParameters" element="env:G131Response"/>
+   </wsdl:message>
+   <wsdl:message name="G140RequestMessage">
+      <wsdl:part name="messageParameters" element="env:G140Request"/>
+   </wsdl:message>
+   <wsdl:message name="G140ResponseMessage">
+      <wsdl:part name="messageParameters" element="env:G140Response"/>
+   </wsdl:message>
+   <wsdl:message name="G141RequestMessage">
+      <wsdl:part name="messageParameters" element="env:G141Request"/>
+   </wsdl:message>
+   <wsdl:message name="G141ResponseMessage">
+      <wsdl:part name="messageParameters" element="env:G141Response"/>
+   </wsdl:message>
+   <wsdl:message name="G150RequestMessage">
+      <wsdl:part name="messageParameters" element="env:G150Request"/>
+   </wsdl:message>
+   <wsdl:message name="G150ResponseMessage">
+      <wsdl:part name="messageParameters" element="env:G150Response"/>
+   </wsdl:message>
+   <wsdl:message name="G151RequestMessage">
+      <wsdl:part name="messageParameters" element="env:G151Request"/>
+   </wsdl:message>
+   <wsdl:message name="G151ResponseMessage">
+      <wsdl:part name="messageParameters" element="env:G151Response"/>
+   </wsdl:message>
+   <wsdl:message name="G160RequestMessage">
+      <wsdl:part name="messageParameters" element="env:G160Request"/>
+   </wsdl:message>
+   <wsdl:message name="G160ResponseMessage">
+      <wsdl:part name="messageParameters" element="env:G160Response"/>
+   </wsdl:message>
+   <wsdl:message name="G161RequestMessage">
+      <wsdl:part name="messageParameters" element="env:G161Request"/>
+   </wsdl:message>
+   <wsdl:message name="G161ResponseMessage">
+      <wsdl:part name="messageParameters" element="env:G161Response"/>
+   </wsdl:message>
+   <wsdl:message name="G170RequestMessage">
+      <wsdl:part name="messageParameters" element="env:G170Request"/>
+   </wsdl:message>
+   <wsdl:message name="G170ResponseMessage">
+      <wsdl:part name="messageParameters" element="env:G170Response"/>
+   </wsdl:message>
+   <wsdl:message name="G171RequestMessage">
+      <wsdl:part name="messageParameters" element="env:G171Request"/>
+   </wsdl:message>
+   <wsdl:message name="G171ResponseMessage">
+      <wsdl:part name="messageParameters" element="env:G171Response"/>
+   </wsdl:message>
+   <wsdl:message name="G180RequestMessage">
+      <wsdl:part name="messageParameters" element="env:G180Request"/>
+   </wsdl:message>
+   <wsdl:message name="G180ResponseMessage">
+      <wsdl:part name="messageParameters" element="env:G180Response"/>
+   </wsdl:message>
+   <wsdl:message name="G181RequestMessage">
+      <wsdl:part name="messageParameters" element="env:G181Request"/>
+   </wsdl:message>
+   <wsdl:message name="G181ResponseMessage">
+      <wsdl:part name="messageParameters" element="env:G181Response"/>
+   </wsdl:message>
+   <wsdl:message name="G182RequestMessage">
+      <wsdl:part name="messageParameters" element="env:G182Request"/>
+   </wsdl:message>
+   <wsdl:message name="G182ResponseMessage">
+      <wsdl:part name="messageParameters" element="env:G182Response"/>
+   </wsdl:message>
+   
+   <wsdl:portType name="ISinglePackServices">
+      <wsdl:operation name="PingSinglePack">
+         <wsdl:input message="ns:PingRequestMessage" wsaw:Action="ns:PingRequestMessage"/>
+         <wsdl:output message="ns:PingResponseMessage" wsaw:Action="ns:PingResponseMessage"/>
+      </wsdl:operation>
+      <wsdl:operation name="G110Verify">
+         <wsdl:input message="ns:G110RequestMessage" wsaw:Action="ns:G110RequestMessage"/>
+         <wsdl:output message="ns:G110ResponseMessage" wsaw:Action="ns:G110ResponseMessage"/>
+      </wsdl:operation>
+      <wsdl:operation name="G120Dispense">
+         <wsdl:input message="ns:G120RequestMessage" wsaw:Action="ns:G120RequestMessage"/>
+         <wsdl:output message="ns:G120ResponseMessage" wsaw:Action="ns:G120ResponseMessage"/>
+      </wsdl:operation>
+      <wsdl:operation name="G121UndoDispense">
+         <wsdl:input message="ns:G121RequestMessage" wsaw:Action="ns:G121RequestMessage"/>
+         <wsdl:output message="ns:G121ResponseMessage" wsaw:Action="ns:G121ResponseMessage"/>
+      </wsdl:operation>
+      <wsdl:operation name="G122DispenseManualEntry">
+         <wsdl:input message="ns:G122RequestMessage" wsaw:Action="ns:G122RequestMessage"/>
+         <wsdl:output message="ns:G122ResponseMessage" wsaw:Action="ns:G122ResponseMessage"/>
+      </wsdl:operation>
+      <wsdl:operation name="G130Destroy">
+         <wsdl:input message="ns:G130RequestMessage" wsaw:Action="ns:G130RequestMessage"/>
+         <wsdl:output message="ns:G130ResponseMessage" wsaw:Action="ns:G130ResponseMessage"/>
+      </wsdl:operation>
+      <wsdl:operation name="G131UndoDestroy">
+         <wsdl:input message="ns:G131RequestMessage" wsaw:Action="ns:G131RequestMessage"/>
+         <wsdl:output message="ns:G131ResponseMessage" wsaw:Action="ns:G131ResponseMessage"/>
+      </wsdl:operation>
+      <wsdl:operation name="G140Export">
+         <wsdl:input message="ns:G140RequestMessage" wsaw:Action="ns:G140RequestMessage"/>
+         <wsdl:output message="ns:G140ResponseMessage" wsaw:Action="ns:G140ResponseMessage"/>
+      </wsdl:operation>
+      <wsdl:operation name="G141UndoExport">
+         <wsdl:input message="ns:G141RequestMessage" wsaw:Action="ns:G141RequestMessage"/>
+         <wsdl:output message="ns:G141ResponseMessage" wsaw:Action="ns:G141ResponseMessage"/>
+      </wsdl:operation>
+      <wsdl:operation name="G150Sample">
+         <wsdl:input message="ns:G150RequestMessage" wsaw:Action="ns:G150RequestMessage"/>
+         <wsdl:output message="ns:G150ResponseMessage" wsaw:Action="ns:G150ResponseMessage"/>
+      </wsdl:operation>
+      <wsdl:operation name="G151UndoSample">
+         <wsdl:input message="ns:G151RequestMessage" wsaw:Action="ns:G151RequestMessage"/>
+         <wsdl:output message="ns:G151ResponseMessage" wsaw:Action="ns:G151ResponseMessage"/>
+      </wsdl:operation>
+      <wsdl:operation name="G160FreeSample">
+         <wsdl:input message="ns:G160RequestMessage" wsaw:Action="ns:G160RequestMessage"/>
+         <wsdl:output message="ns:G160ResponseMessage" wsaw:Action="ns:G160ResponseMessage"/>
+      </wsdl:operation>
+      <wsdl:operation name="G161UndoFreeSample">
+         <wsdl:input message="ns:G161RequestMessage" wsaw:Action="ns:G161RequestMessage"/>
+         <wsdl:output message="ns:G161ResponseMessage" wsaw:Action="ns:G161ResponseMessage"/>
+      </wsdl:operation>
+      <wsdl:operation name="G170Lock">
+         <wsdl:input message="ns:G170RequestMessage" wsaw:Action="ns:G170RequestMessage"/>
+         <wsdl:output message="ns:G170ResponseMessage" wsaw:Action="ns:G170ResponseMessage"/>
+      </wsdl:operation>
+      <wsdl:operation name="G171UndoLock">
+         <wsdl:input message="ns:G171RequestMessage" wsaw:Action="ns:G171RequestMessage"/>
+         <wsdl:output message="ns:G171ResponseMessage" wsaw:Action="ns:G171ResponseMessage"/>
+      </wsdl:operation>
+      <wsdl:operation name="G180Stolen">
+         <wsdl:input message="ns:G180RequestMessage" wsaw:Action="ns:G180RequestMessage"/>
+         <wsdl:output message="ns:G180ResponseMessage" wsaw:Action="ns:G180ResponseMessage"/>
+      </wsdl:operation>
+      <wsdl:operation name="G181UndoStolen">
+         <wsdl:input message="ns:G181RequestMessage" wsaw:Action="ns:G181RequestMessage"/>
+         <wsdl:output message="ns:G181ResponseMessage" wsaw:Action="ns:G181ResponseMessage"/>
+      </wsdl:operation>
+      <wsdl:operation name="G182StolenManualEntry">
+         <wsdl:input message="ns:G182RequestMessage" wsaw:Action="ns:G182RequestMessage"/>
+         <wsdl:output message="ns:G182ResponseMessage" wsaw:Action="ns:G182ResponseMessage"/>
+      </wsdl:operation>
+   </wsdl:portType>
+   
+   <wsdl:binding name="WSHttpBinding_ISinglePackServices" type="ns:ISinglePackServices">
+      <soap12:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+      <wsdl:operation name="PingSinglePack">
+         <soap12:operation soapAction="urn:PingSinglePack" style="document"/>
+         <wsdl:input>
+            <soap12:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap12:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="G110Verify">
+         <soap12:operation soapAction="urn:G110Verify" style="document"/>
+         <wsdl:input>
+            <soap12:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap12:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="G120Dispense">
+         <soap12:operation soapAction="urn:G120Dispense" style="document"/>
+         <wsdl:input>
+            <soap12:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap12:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="G121UndoDispense">
+         <soap12:operation soapAction="urn:G121UndoDispense" style="document"/>
+         <wsdl:input>
+            <soap12:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap12:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="G122DispenseManualEntry">
+         <soap12:operation soapAction="urn:G122DispenseManualEntry" style="document"/>
+         <wsdl:input>
+            <soap12:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap12:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="G130Destroy">
+         <soap12:operation soapAction="urn:G130Destroy" style="document"/>
+         <wsdl:input>
+            <soap12:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap12:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="G131UndoDestroy">
+         <soap12:operation soapAction="urn:G131UndoDestroy" style="document"/>
+         <wsdl:input>
+            <soap12:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap12:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="G140Export">
+         <soap12:operation soapAction="urn:G140Export" style="document"/>
+         <wsdl:input>
+            <soap12:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap12:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="G141UndoExport">
+         <soap12:operation soapAction="urn:G141UndoExport" style="document"/>
+         <wsdl:input>
+            <soap12:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap12:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="G150Sample">
+         <soap12:operation soapAction="urn:G150Sample" style="document"/>
+         <wsdl:input>
+            <soap12:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap12:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="G151UndoSample">
+         <soap12:operation soapAction="urn:G151UndoSample" style="document"/>
+         <wsdl:input>
+            <soap12:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap12:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="G160FreeSample">
+         <soap12:operation soapAction="urn:G160FreeSample" style="document"/>
+         <wsdl:input>
+            <soap12:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap12:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="G161UndoFreeSample">
+         <soap12:operation soapAction="urn:G161UndoFreeSample" style="document"/>
+         <wsdl:input>
+            <soap12:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap12:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="G170Lock">
+         <soap12:operation soapAction="urn:G170Lock" style="document"/>
+         <wsdl:input>
+            <soap12:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap12:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="G171UndoLock">
+         <soap12:operation soapAction="urn:G171UndoLock" style="document"/>
+         <wsdl:input>
+            <soap12:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap12:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="G180Stolen">
+         <soap12:operation soapAction="urn:G180Stolen" style="document"/>
+         <wsdl:input>
+            <soap12:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap12:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="G181UndoStolen">
+         <soap12:operation soapAction="urn:G181UndoStolen" style="document"/>
+         <wsdl:input>
+            <soap12:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap12:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="G182StolenManualEntry">
+         <soap12:operation soapAction="urn:G182StolenManualEntry" style="document"/>
+         <wsdl:input>
+            <soap12:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap12:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+   </wsdl:binding>
+   <wsdl:service name="SinglePackServices">
+      <wsdl:port name="Port_SinglePackServices" binding="ns:WSHttpBinding_ISinglePackServices">
+         <soap12:address location="http://localhost:8080/WS_SINGLE_TRANSACTIONS_V1/SinglePackServiceV10"/>
+      </wsdl:port>
+   </wsdl:service>
+</wsdl:definitions>

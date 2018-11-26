@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns="urn:types.nmvs.eu:v2.0"
+	targetNamespace="urn:types.nmvs.eu:v2.0" elementFormDefault="qualified"
+	attributeFormDefault="qualified">
+	<include schemaLocation="NMVS_Composite_Types.xsd" />
+	<element name="O11_LoadTermsAndConditions" type="tns:O11_LoadTermsAndConditions_Type" />
+
+	<complexType name="O11_LoadTermsAndConditions_Type">
+		<sequence>
+			<element name="Header" type="tns:HeaderResponse_Type" minOccurs="1" maxOccurs="1" />
+			<element name="Body" type="tns:O11_LoadTermsAndConditionsBody_Type"	minOccurs="1" maxOccurs="1" />
+		</sequence>
+	</complexType>
+
+
+	<complexType name="O11_LoadTermsAndConditionsBody_Type">
+		<sequence>
+			<element name="TermsAndConditions" type="tns:Terms_And_Conditions_Type"	minOccurs="0" maxOccurs="1" />
+			<element name="ReturnCode" type="tns:ReturnCode_Type" minOccurs="1" maxOccurs="1" />
+		</sequence>
+	</complexType>
+
+	<complexType name="Terms_And_Conditions_Type">
+		<sequence>
+			<element name="Version" type="decimal" minOccurs="1" maxOccurs="1" />
+			<element name="Text" type="normalizedString" minOccurs="1" maxOccurs="1" />
+			<element name="StartDate" type="tns:Timestamp_Type"	minOccurs="1" maxOccurs="1" />
+			<element name="AcceptedByUser" type="boolean" minOccurs="1" maxOccurs="1" />
+		</sequence>
+	</complexType>
+
+</schema>
+
+
