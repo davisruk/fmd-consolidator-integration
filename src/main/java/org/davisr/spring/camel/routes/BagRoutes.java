@@ -13,6 +13,7 @@ import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.endpoint.Server;
 import org.apache.cxf.frontend.AbstractWSDLBasedEndpointFactory;
 import org.apache.cxf.transport.http.HTTPConduit;
+import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 import org.davisr.spring.camel.fmd.bag.model.Bag;
 import org.davisr.spring.camel.fmd.nmvs.response.FMDResponse;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,9 +28,21 @@ public class BagRoutes extends RouteBuilder {
     @Value("${server.address}")
     String host;
 
-    @Value("${http.client.ssl.trust-store}")
+    @Value("${http.client.ssl.key-store}")
     private String keyStore;
     
+    @Value("${http.proxy.server}")
+    private String proxyServer;
+    
+    @Value("${http.proxy.port}")
+    private Integer proxyPort;
+    
+    @Value("${http.client.ssl.key-store.password}")
+    private String keyStorePassword;
+    
+    @Value("${http.client.ssl.key-store.type}")
+    private String keyStoreType;
+
     @Override
 	public void configure() throws Exception {
     	restConfiguration()
@@ -116,24 +129,26 @@ public class BagRoutes extends RouteBuilder {
 
 			@Override
 			public void configureClient(Client client) {
-	            HTTPConduit conduit = (HTTPConduit) client.getConduit();
-                /*
-	            HTTPClientPolicy policy = new HTTPClientPolicy();
-                policy.setProxyServer("gateway.zscalertwo.net");
-                policy.setProxyServerPort(9480);
-                conduit.setClient(policy);
-                */
+	            
+				HTTPConduit conduit = (HTTPConduit) client.getConduit();
+				if (proxyServer != null && proxyServer.length() > 0) {
+					
+		            HTTPClientPolicy policy = new HTTPClientPolicy();
+	                policy.setProxyServer(proxyServer);
+	                policy.setProxyServerPort(proxyPort);
+	                conduit.setClient(policy);
+				}
                 try {
                     TLSClientParameters tls = new TLSClientParameters();
 
                     KeyStoreParameters keyStoreParameters = new KeyStoreParameters();
                     keyStoreParameters.setResource(keyStore);
-                    keyStoreParameters.setPassword("wmD6xw1u");
-                    keyStoreParameters.setType("PKCS12");
+                    keyStoreParameters.setPassword(keyStorePassword);
+                    keyStoreParameters.setType(keyStoreType);
 
                     KeyManagersParameters keyManagersParameters = new KeyManagersParameters();
                     keyManagersParameters.setKeyStore(keyStoreParameters);
-                    keyManagersParameters.setKeyPassword("wmD6xw1u");
+                    keyManagersParameters.setKeyPassword(keyStorePassword);
                 	tls.setKeyManagers(keyManagersParameters.createKeyManagers());
 	                conduit.setTlsClientParameters(tls);
                 } catch (Exception e) {

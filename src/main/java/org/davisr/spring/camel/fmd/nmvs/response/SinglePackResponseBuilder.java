@@ -7,10 +7,13 @@ import org.springframework.stereotype.Component;
 public class SinglePackResponseBuilder {
 
 	public FMDResponse buildG110Response (G110Response response) {
-		return FMDResponse.builder()
+		FMDResponse r = FMDResponse.builder()
 		.code(response.getBody().getReturnCode().getCode().name())
 		.description(response.getBody().getReturnCode().getDesc())
-		.packState(response.getBody().getPack().getState().name())
 		.build();
+		if (response.getBody().getPack() != null) {
+			r.setPackState(response.getBody().getPack().getState().name());
+		}
+		return r;
 	}
 }
