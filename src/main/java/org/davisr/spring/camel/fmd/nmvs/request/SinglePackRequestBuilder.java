@@ -37,7 +37,7 @@ public class SinglePackRequestBuilder {
 	private RequestAuthHeaderDataType buildAuthHeader () {
 		RequestAuthHeaderDataType h = new RequestAuthHeaderDataType();
 		h.setClientLoginId("SWS");
-		h.setPassword("C0lum6u$01");
+		h.setPassword("Gu3$$Wh0");
 		h.setUserId("DAVI1001");
 		return h;
 	}

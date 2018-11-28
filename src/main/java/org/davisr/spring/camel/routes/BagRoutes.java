@@ -53,7 +53,7 @@ public class BagRoutes extends RouteBuilder {
 			.apiProperty("api.version", "v1")
 			.apiContextRouteId("doc-api")
 			.component("servlet")
-			.bindingMode(RestBindingMode.json);
+			.bindingMode(RestBindingMode.auto);
 
     	rest("/bags")
 			.post()
@@ -78,7 +78,8 @@ public class BagRoutes extends RouteBuilder {
     	
     	from("direct:createBag")
     		.routeId("createBag")
-    		.bean("bagDbService", "saveBag");
+    		.bean("bagDbService", "saveBag")
+    		.setHeader(Exchange.CONTENT_TYPE, constant("application/json"));
     	
     	from("direct:getBagById")
 			.routeId("getBagById")
