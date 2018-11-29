@@ -1,9 +1,11 @@
 package org.davisr.spring.camel.fmd.nmvs.response;
 
+import java.util.ArrayList;
+
 import org.davisr.spring.camel.nmvs.G110Response;
 import org.springframework.stereotype.Component;
 
-@Component("singlePackResponseBuilder")
+@Component("fmdResponseBuilder")
 public class SinglePackResponseBuilder {
 
 	public FMDResponse buildG110Response (G110Response response) {
@@ -14,6 +16,12 @@ public class SinglePackResponseBuilder {
 		if (response.getBody().getPack() != null) {
 			r.setPackState(response.getBody().getPack().getState().name());
 		}
+		return r;
+	}
+	
+	public ArrayList buildBagVerifyResults(ArrayList responses){
+		ArrayList<FMDResponse> r = new ArrayList<FMDResponse>();
+		r.add(FMDResponse.builder().description("Number of responses = " + responses.size()).build());
 		return r;
 	}
 }

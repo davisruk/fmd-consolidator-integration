@@ -1,5 +1,7 @@
 package org.davisr.spring.camel.fmd.nmvs.response;
 
+import org.davisr.spring.camel.fmd.bag.model.Pack;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

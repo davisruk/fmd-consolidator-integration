@@ -15,6 +15,7 @@ import org.apache.cxf.frontend.AbstractWSDLBasedEndpointFactory;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 import org.davisr.spring.camel.fmd.bag.model.Bag;
+import org.davisr.spring.camel.fmd.bag.model.Pack;
 import org.davisr.spring.camel.fmd.nmvs.response.FMDResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -69,12 +70,18 @@ public class BagRoutes extends RouteBuilder {
 				.to("direct:getPackById")
 	    	.get()
 				.to("direct:getAllPacks");				
-
+/*
     	rest("/dispense")
     		.get("/{id}")
     			.outType(FMDResponse.class)
     			.to("direct:dispenseBag");
-
+*/
+    	rest("/dispense")
+		.post()
+			.outType(FMDResponse.class)
+			.type(Bag.class)
+			.to("direct:dispenseBag");
+    	
     	
     	from("direct:createBag")
     		.routeId("createBag")
@@ -97,18 +104,17 @@ public class BagRoutes extends RouteBuilder {
 			.routeId("getAllPacks")
 			.bean("packDbService", "getAllPacks");
     	
-    	// currently only a single pack - change to bag later 
     	from("direct:dispenseBag")
 			.routeId("dispenseBag")
-			.to("direct:getPackById")
+			.to("direct:createBag")
+			.split(jsonpath("$.packs", Pack.class), new BaggregationStrategy())
 			.bean("singlePackRequestBuilder", "buildG110Request")
-    		.setHeader("operationName", constant("G110Verify"))
-    		.setHeader("operationNamespace", constant("urn:services.nmvs.eu:v2.0"))
-    		.to(fmdEndPoint(getContext()))
-    		.bean("singlePackResponseBuilder", "buildG110Response")
-    		.setHeader(Exchange.CONTENT_TYPE, constant("application/json"));
-    		//.log("The response was ${body[0]}");
-    	
+			.setHeader("operationName", constant("G110Verify"))
+			.setHeader("operationNamespace", constant("urn:services.nmvs.eu:v2.0"))
+			.to(fmdEndPoint(getContext()))
+			.end()
+			.to("bean:fmdResponseBuilder?method=buildBagVerifyResults")
+			.setHeader(Exchange.CONTENT_TYPE, constant("application/json"));
 	}
 
     public CxfEndpoint fmdEndPoint(CamelContext ctx) {
