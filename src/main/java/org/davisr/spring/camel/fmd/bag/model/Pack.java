@@ -54,4 +54,6 @@ public class Pack {
 	
 	@Column(name = "DECOMMISSIONED")
 	private boolean decommissioned;
+	
+	private String packState;
 }

@@ -70,18 +70,12 @@ public class BagRoutes extends RouteBuilder {
 				.to("direct:getPackById")
 	    	.get()
 				.to("direct:getAllPacks");				
-/*
-    	rest("/dispense")
-    		.get("/{id}")
-    			.outType(FMDResponse.class)
-    			.to("direct:dispenseBag");
-*/
-    	rest("/dispense")
+
+    	rest("/verify")
 		.post()
 			.outType(FMDResponse.class)
 			.type(Bag.class)
-			.to("direct:dispenseBag");
-    	
+			.to("direct:verifyBag");
     	
     	from("direct:createBag")
     		.routeId("createBag")
@@ -104,8 +98,8 @@ public class BagRoutes extends RouteBuilder {
 			.routeId("getAllPacks")
 			.bean("packDbService", "getAllPacks");
     	
-    	from("direct:dispenseBag")
-			.routeId("dispenseBag")
+    	from("direct:verifyBag")
+			.routeId("verifyBag")
 			.to("direct:createBag")
 			.bean("singlePackRequestBuilder", "getPacksFromBag")
 			.split(body(), new BaggregationStrategy())

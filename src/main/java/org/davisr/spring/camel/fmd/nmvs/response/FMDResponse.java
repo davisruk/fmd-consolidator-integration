@@ -14,5 +14,5 @@ import lombok.NoArgsConstructor;
 public class FMDResponse {
 	private String code;
 	private String description;
-	private String packState;
+	private Pack pack;
 }
