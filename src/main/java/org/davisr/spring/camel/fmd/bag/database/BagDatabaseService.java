@@ -23,6 +23,10 @@ public class BagDatabaseService {
 	
 	public Bag saveBag (Bag bag) {
 		bag.getPacks().forEach(pack -> pack.setBag(bag));
+		Bag repoBag = bagRepo.findByLabelCode(bag.getLabelCode());
+		if (repoBag != null) {
+			return repoBag;
+		}
 		return bagRepo.save(bag);
 	}
 }

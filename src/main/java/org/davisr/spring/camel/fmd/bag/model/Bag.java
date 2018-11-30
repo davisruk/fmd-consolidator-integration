@@ -12,6 +12,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,6 +26,7 @@ import lombok.NoArgsConstructor;
 @Data
 @Entity
 @Table(name="BAG")
+@JsonInclude(Include.NON_NULL)
 public class Bag {
 	@Id @GeneratedValue @Column(name="ID")
 	private Integer id;

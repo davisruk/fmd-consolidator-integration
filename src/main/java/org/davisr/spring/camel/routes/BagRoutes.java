@@ -15,7 +15,7 @@ import org.apache.cxf.frontend.AbstractWSDLBasedEndpointFactory;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 import org.davisr.spring.camel.fmd.bag.model.Bag;
-import org.davisr.spring.camel.fmd.bag.model.Pack;
+import org.davisr.spring.camel.fmd.nmvs.request.FMDRequest;
 import org.davisr.spring.camel.fmd.nmvs.response.FMDResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -56,6 +56,11 @@ public class BagRoutes extends RouteBuilder {
 			.component("servlet")
 			.bindingMode(RestBindingMode.auto);
 
+    	rest("/fmd")
+    		.post()
+			.type(FMDRequest.class)
+			.to("direct:fmdRequest");
+    		
     	rest("/bags")
 			.post()
 				.type(Bag.class)
@@ -103,13 +108,38 @@ public class BagRoutes extends RouteBuilder {
 			.to("direct:createBag")
 			.bean("singlePackRequestBuilder", "getPacksFromBag")
 			.split(body(), new BaggregationStrategy())
-			.bean("singlePackRequestBuilder", "buildG110Request")
-			.setHeader("operationName", constant("G110Verify"))
-			.setHeader("operationNamespace", constant("urn:services.nmvs.eu:v2.0"))
-			.to(fmdEndPoint(getContext()))
+				.bean("singlePackRequestBuilder", "buildG110Request")
+				.setHeader("operationName", constant("G110Verify"))
+				.setHeader("operationNamespace", constant("urn:services.nmvs.eu:v2.0"))
+				.to(fmdEndPoint(getContext()))
 			.end()
-			.to("bean:fmdResponseBuilder?method=buildBagVerifyResults")
+			.to("bean:fmdResponseBuilder?method=buildBagResponse(${body}, ${property.originalRequest})")
 			.setHeader(Exchange.CONTENT_TYPE, constant("application/json"));
+
+    	from("direct:dispenseBag")
+			.routeId("dispenseBag")
+			.to("direct:createBag")
+			.bean("singlePackRequestBuilder", "getPacksFromBag")
+			.split(body(), new BaggregationStrategy())
+				.bean("singlePackRequestBuilder", "buildG120Request")
+				.setHeader("operationName", constant("G120Dispense"))
+				.setHeader("operationNamespace", constant("urn:services.nmvs.eu:v2.0"))
+				.to(fmdEndPoint(getContext()))
+			.end()
+			.to("bean:fmdResponseBuilder?method=buildBagResponse(${body}, ${property.originalRequest})")
+			.setHeader(Exchange.CONTENT_TYPE, constant("application/json"));
+
+    	from("direct:fmdRequest")
+			.routeId("fmdRequest")
+			.setProperty("originalRequest", body())
+			.choice()
+			.when().method("singlePackRequestBuilder", "isVerifyRequest")
+				.bean("singlePackRequestBuilder", "getBag")
+				.to("direct:verifyBag")
+			.when().method("singlePackRequestBuilder", "isDispenseRequest")
+				.bean("singlePackRequestBuilder", "getBag")
+				.to("direct:dispenseBag")
+			.end();
 	}
 
     public CxfEndpoint fmdEndPoint(CamelContext ctx) {

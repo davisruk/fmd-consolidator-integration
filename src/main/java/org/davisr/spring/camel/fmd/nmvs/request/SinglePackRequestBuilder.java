@@ -3,11 +3,13 @@ package org.davisr.spring.camel.fmd.nmvs.request;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+import org.apache.camel.Body;
 import org.davisr.spring.camel.fmd.bag.model.Bag;
 import org.davisr.spring.camel.fmd.bag.model.Pack;
 import org.davisr.spring.camel.nmvs.BaseBatchType;
 import org.davisr.spring.camel.nmvs.CatalogProductSchemeType;
 import org.davisr.spring.camel.nmvs.G110Request;
+import org.davisr.spring.camel.nmvs.G120Request;
 import org.davisr.spring.camel.nmvs.ProductIdentifierType;
 import org.davisr.spring.camel.nmvs.RequestAuthHeaderDataType;
 import org.davisr.spring.camel.nmvs.RequestDataType;
@@ -21,6 +23,14 @@ import org.springframework.stereotype.Component;
 @Component("singlePackRequestBuilder")
 public class SinglePackRequestBuilder {
 
+	public boolean isVerifyRequest (FMDRequest request) {
+		return request.getOperation().equals("verify");
+	}
+	
+	public boolean isDispenseRequest (FMDRequest request) {
+		return request.getOperation().equals("dispense");
+	}
+
 	public G110Request buildG110Request (Pack p) {
 		G110Request r = new G110Request();
 		r.setHeader(buildHeader());
@@ -28,6 +38,17 @@ public class SinglePackRequestBuilder {
 		return r;
 	}
 	
+	public G120Request buildG120Request (Pack p) {
+		G120Request r = new G120Request();
+		r.setHeader(buildHeader());
+		r.setBody(buildBody(p));
+		return r;
+	}
+
+	public Bag getBag (FMDRequest request) {
+		return request.getBag();
+	}
+
 	public List<Pack> getPacksFromBag (Bag b) {
 		return b.getPacks();
 	}

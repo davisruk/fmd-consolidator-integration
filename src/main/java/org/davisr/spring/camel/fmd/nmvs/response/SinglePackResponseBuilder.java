@@ -1,41 +1,57 @@
 package org.davisr.spring.camel.fmd.nmvs.response;
 
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import org.apache.cxf.message.MessageContentsList;
+import org.davisr.spring.camel.fmd.bag.model.Bag;
 import org.davisr.spring.camel.fmd.bag.model.Pack;
+import org.davisr.spring.camel.fmd.nmvs.request.FMDRequest;
 import org.davisr.spring.camel.nmvs.G110Response;
+import org.davisr.spring.camel.nmvs.G120Response;
+import org.davisr.spring.camel.nmvs.O1BodyType;
 import org.davisr.spring.camel.nmvs.ResponsePackType;
 import org.davisr.spring.camel.nmvs.ResponseProductType;
 import org.springframework.stereotype.Component;
+
 
 @Component("fmdResponseBuilder")
 public class SinglePackResponseBuilder {
 
 	public FMDResponse buildG110Response (G110Response response) {
+		return buildFMDResponse(response.getBody());
+	}
+
+	public FMDResponse buildG120Response (G120Response response) {
+		return buildFMDResponse(response.getBody());
+	}
+
+	private FMDResponse buildFMDResponse (O1BodyType response) {
 		FMDResponse r = FMDResponse.builder()
-		.code(response.getBody().getReturnCode().getCode().name())
-		.description(response.getBody().getReturnCode().getDesc())
-		.build();
-		ResponsePackType nmvsPack = response.getBody().getPack();
-		ResponseProductType nmvsProduct = response.getBody().getProduct();
+				.code(response.getReturnCode().getCode().name())
+				.description(response.getReturnCode().getDesc())
+			.build();
+		ResponsePackType nmvsPack = response.getPack();
+		ResponseProductType nmvsProduct = response.getProduct();
+		List<String> reasons = new ArrayList<String>();
+		r.setReasons(reasons);
+		response.getPack().getReason().forEach(reason -> reasons.add(reason.name()));
 		if (nmvsPack != null) {
-			r.setPack(Pack.builder()
+		r.setPack(Pack.builder()
 						.batch(nmvsProduct.getBatch().getId())
 						.expiry(buildDate(nmvsProduct.getBatch().getExpDate()))
 						.gtin(nmvsProduct.getProductCode().getValue())
 						.serialNumber(nmvsPack.getSn())
 						.packState(nmvsPack.getState().name())
-						.build());
+					.build());
 		}
 		return r;
+		
 	}
-	
 	private Date buildDate(String date) {
 		try {
 			DateFormat df = new SimpleDateFormat("yyMMdd", Locale.ENGLISH);
@@ -45,14 +61,32 @@ public class SinglePackResponseBuilder {
 			return null;
 		}
 	}
-	public ArrayList<FMDResponse> buildBagVerifyResults(ArrayList responses){
+	
+	public ArrayList<FMDResponse> buildBagVerifyResults(ArrayList responses, String requestOperation){
 		ArrayList<FMDResponse> fmdResponses = new ArrayList<FMDResponse>();
 		ArrayList<MessageContentsList> contents = (ArrayList<MessageContentsList>) responses;
-		contents.forEach(contentList -> {
-			G110Response g110Response = (G110Response) contentList.get(0);
-			fmdResponses.add(buildG110Response(g110Response));
-		});
-
+		
+		if (requestOperation.equals("verify")) {
+			contents.forEach(contentList -> {
+				G110Response g110Response = (G110Response) contentList.get(0);
+				fmdResponses.add(buildG110Response(g110Response));
+			});
+		}
+		else if (requestOperation.equals("dispense")) {
+			contents.forEach(contentList -> {
+				G120Response g120Response = (G120Response) contentList.get(0);
+				fmdResponses.add(buildG120Response(g120Response));
+			});
+		}
+				
 		return fmdResponses;
+	}
+
+	public FMDBagResponse buildBagResponse(ArrayList responses, FMDRequest request) {
+		return FMDBagResponse.builder()
+					.bagId(request.getBag().getId())
+					.bagLabel(request.getBag().getLabelCode())
+					.packResponses(buildBagVerifyResults(responses, request.getOperation()))
+				.build();
 	}
 }

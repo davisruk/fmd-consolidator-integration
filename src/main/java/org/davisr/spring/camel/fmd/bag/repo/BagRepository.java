@@ -4,5 +4,5 @@ import org.davisr.spring.camel.fmd.bag.model.Bag;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface BagRepository extends JpaRepository<Bag, Integer>{
-
+	public Bag findByLabelCode(String label);
 }
