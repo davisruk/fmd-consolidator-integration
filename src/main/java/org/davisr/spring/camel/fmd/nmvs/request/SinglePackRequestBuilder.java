@@ -1,7 +1,9 @@
 package org.davisr.spring.camel.fmd.nmvs.request;
 
 import java.text.SimpleDateFormat;
+import java.util.List;
 
+import org.davisr.spring.camel.fmd.bag.model.Bag;
 import org.davisr.spring.camel.fmd.bag.model.Pack;
 import org.davisr.spring.camel.nmvs.BaseBatchType;
 import org.davisr.spring.camel.nmvs.CatalogProductSchemeType;
@@ -26,6 +28,10 @@ public class SinglePackRequestBuilder {
 		return r;
 	}
 	
+	public List<Pack> getPacksFromBag (Bag b) {
+		return b.getPacks();
+	}
+
 	private RequestHeaderDataType buildHeader() {
 		RequestHeaderDataType h = new RequestHeaderDataType();
 		h.setAuth(buildAuthHeader());

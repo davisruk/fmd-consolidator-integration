@@ -21,6 +21,7 @@ public class BaggregationStrategy implements AggregationStrategy {
         }
         Message in = oldExchange.getIn();
         list = in.getBody(ArrayList.class);
+        list.add(newBody);
         return oldExchange;
     }
 
