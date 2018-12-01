@@ -8,11 +8,11 @@ import java.util.List;
 import java.util.Locale;
 
 import org.apache.cxf.message.MessageContentsList;
-import org.davisr.spring.camel.fmd.bag.model.Bag;
 import org.davisr.spring.camel.fmd.bag.model.Pack;
 import org.davisr.spring.camel.fmd.nmvs.request.FMDRequest;
 import org.davisr.spring.camel.nmvs.G110Response;
 import org.davisr.spring.camel.nmvs.G120Response;
+import org.davisr.spring.camel.nmvs.G121Response;
 import org.davisr.spring.camel.nmvs.O1BodyType;
 import org.davisr.spring.camel.nmvs.ResponsePackType;
 import org.davisr.spring.camel.nmvs.ResponseProductType;
@@ -27,6 +27,10 @@ public class SinglePackResponseBuilder {
 	}
 
 	public FMDResponse buildG120Response (G120Response response) {
+		return buildFMDResponse(response.getBody());
+	}
+
+	public FMDResponse buildG121Response (G121Response response) {
 		return buildFMDResponse(response.getBody());
 	}
 
@@ -71,11 +75,15 @@ public class SinglePackResponseBuilder {
 				G110Response g110Response = (G110Response) contentList.get(0);
 				fmdResponses.add(buildG110Response(g110Response));
 			});
-		}
-		else if (requestOperation.equals("dispense")) {
+		} else if (requestOperation.equals("dispense")) {
 			contents.forEach(contentList -> {
 				G120Response g120Response = (G120Response) contentList.get(0);
 				fmdResponses.add(buildG120Response(g120Response));
+			});
+		} else if (requestOperation.equals("undo-dispense")) {
+			contents.forEach(contentList -> {
+				G121Response g121Response = (G121Response) contentList.get(0);
+				fmdResponses.add(buildG121Response(g121Response));
 			});
 		}
 				

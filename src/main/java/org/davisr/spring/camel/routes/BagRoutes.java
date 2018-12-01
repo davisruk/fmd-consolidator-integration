@@ -129,6 +129,19 @@ public class BagRoutes extends RouteBuilder {
 			.to("bean:fmdResponseBuilder?method=buildBagResponse(${body}, ${property.originalRequest})")
 			.setHeader(Exchange.CONTENT_TYPE, constant("application/json"));
 
+    	from("direct:undoDispenseBag")
+			.routeId("undoDispenseBag")
+			.to("direct:createBag")
+			.bean("singlePackRequestBuilder", "getPacksFromBag")
+			.split(body(), new BaggregationStrategy())
+				.bean("singlePackRequestBuilder", "buildG121Request")
+				.setHeader("operationName", constant("G121UndoDispense"))
+				.setHeader("operationNamespace", constant("urn:services.nmvs.eu:v2.0"))
+				.to(fmdEndPoint(getContext()))
+			.end()
+			.to("bean:fmdResponseBuilder?method=buildBagResponse(${body}, ${property.originalRequest})")
+			.setHeader(Exchange.CONTENT_TYPE, constant("application/json"));
+
     	from("direct:fmdRequest")
 			.routeId("fmdRequest")
 			.setProperty("originalRequest", body())
@@ -139,6 +152,10 @@ public class BagRoutes extends RouteBuilder {
 			.when().method("singlePackRequestBuilder", "isDispenseRequest")
 				.bean("singlePackRequestBuilder", "getBag")
 				.to("direct:dispenseBag")
+			.when().method("singlePackRequestBuilder", "isUndoDispenseRequest")
+				.bean("singlePackRequestBuilder", "getBag")
+				.to("direct:undoDispenseBag")
+				
 			.end();
 	}
 

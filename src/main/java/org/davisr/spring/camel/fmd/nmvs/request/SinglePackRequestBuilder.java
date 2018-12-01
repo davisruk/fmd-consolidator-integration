@@ -3,13 +3,13 @@ package org.davisr.spring.camel.fmd.nmvs.request;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
-import org.apache.camel.Body;
 import org.davisr.spring.camel.fmd.bag.model.Bag;
 import org.davisr.spring.camel.fmd.bag.model.Pack;
 import org.davisr.spring.camel.nmvs.BaseBatchType;
 import org.davisr.spring.camel.nmvs.CatalogProductSchemeType;
 import org.davisr.spring.camel.nmvs.G110Request;
 import org.davisr.spring.camel.nmvs.G120Request;
+import org.davisr.spring.camel.nmvs.G121Request;
 import org.davisr.spring.camel.nmvs.ProductIdentifierType;
 import org.davisr.spring.camel.nmvs.RequestAuthHeaderDataType;
 import org.davisr.spring.camel.nmvs.RequestDataType;
@@ -17,6 +17,7 @@ import org.davisr.spring.camel.nmvs.RequestHeaderDataType;
 import org.davisr.spring.camel.nmvs.RequestPackType;
 import org.davisr.spring.camel.nmvs.RequestProductType;
 import org.davisr.spring.camel.nmvs.RequestTransactionHeaderDataType;
+import org.davisr.spring.camel.nmvs.RequestUndoSingleDataType;
 import org.davisr.spring.camel.nmvs.UserSoftwareType;
 import org.springframework.stereotype.Component;
 
@@ -31,6 +32,10 @@ public class SinglePackRequestBuilder {
 		return request.getOperation().equals("dispense");
 	}
 
+	public boolean isUndoDispenseRequest (FMDRequest request) {
+		return request.getOperation().equals("undo-dispense");
+	}
+
 	public G110Request buildG110Request (Pack p) {
 		G110Request r = new G110Request();
 		r.setHeader(buildHeader());
@@ -42,6 +47,13 @@ public class SinglePackRequestBuilder {
 		G120Request r = new G120Request();
 		r.setHeader(buildHeader());
 		r.setBody(buildBody(p));
+		return r;
+	}
+
+	public G121Request buildG121Request (Pack p) {
+		G121Request r = new G121Request();
+		r.setHeader(buildHeader());
+		r.setBody(buildUndoBody(p));
 		return r;
 	}
 
@@ -91,6 +103,12 @@ public class SinglePackRequestBuilder {
 		return r;
 	}
 	
+	private RequestUndoSingleDataType buildUndoBody(Pack p) {
+		RequestUndoSingleDataType r = new RequestUndoSingleDataType();
+		r.setPack(buildPack(p));
+		r.setProduct(buildProduct(p));
+		return r;
+	}
 	private RequestPackType buildPack (Pack p) {
 		RequestPackType rp = new RequestPackType();
 		rp.setSn(p.getSerialNumber());
