@@ -2,6 +2,7 @@ package org.davisr.spring.camel.routes;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
+import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.cxf.CxfEndpoint;
 import org.apache.camel.component.cxf.CxfEndpointConfigurer;
@@ -103,19 +104,6 @@ public class BagRoutes extends RouteBuilder {
 			.routeId("getAllPacks")
 			.bean("packDbService", "getAllPacks");
     	
-    	from("direct:verifyBag")
-			.routeId("verifyBag")
-			.to("direct:createBag")
-			.bean("singlePackRequestBuilder", "getPacksFromBag")
-			.split(body(), new BaggregationStrategy())
-				.bean("singlePackRequestBuilder", "buildG110Request")
-				.setHeader("operationName", constant("G110Verify"))
-				.setHeader("operationNamespace", constant("urn:services.nmvs.eu:v2.0"))
-				.to(fmdEndPoint(getContext()))
-			.end()
-			.to("bean:fmdResponseBuilder?method=buildBagResponse(${body}, ${property.originalRequest})")
-			.setHeader(Exchange.CONTENT_TYPE, constant("application/json"));
-
     	from("direct:dispenseBag")
 			.routeId("dispenseBag")
 			.to("direct:createBag")
@@ -124,7 +112,7 @@ public class BagRoutes extends RouteBuilder {
 				.bean("singlePackRequestBuilder", "buildG120Request")
 				.setHeader("operationName", constant("G120Dispense"))
 				.setHeader("operationNamespace", constant("urn:services.nmvs.eu:v2.0"))
-				.to(fmdEndPoint(getContext()))
+				.to(fmdEndPoint(getContext(), ""))
 			.end()
 			.to("bean:fmdResponseBuilder?method=buildBagResponse(${body}, ${property.originalRequest})")
 			.setHeader(Exchange.CONTENT_TYPE, constant("application/json"));
@@ -137,7 +125,7 @@ public class BagRoutes extends RouteBuilder {
 				.bean("singlePackRequestBuilder", "buildG121Request")
 				.setHeader("operationName", constant("G121UndoDispense"))
 				.setHeader("operationNamespace", constant("urn:services.nmvs.eu:v2.0"))
-				.to(fmdEndPoint(getContext()))
+				.to(fmdEndPoint(getContext(), ""))
 			.end()
 			.to("bean:fmdResponseBuilder?method=buildBagResponse(${body}, ${property.originalRequest})")
 			.setHeader(Exchange.CONTENT_TYPE, constant("application/json"));
@@ -148,6 +136,7 @@ public class BagRoutes extends RouteBuilder {
 			.choice()
 			.when().method("singlePackRequestBuilder", "isVerifyRequest")
 				.bean("singlePackRequestBuilder", "getBag")
+				.process(verifyProcessor())
 				.to("direct:verifyBag")
 			.when().method("singlePackRequestBuilder", "isDispenseRequest")
 				.bean("singlePackRequestBuilder", "getBag")
@@ -157,19 +146,49 @@ public class BagRoutes extends RouteBuilder {
 				.to("direct:undoDispenseBag")
 				
 			.end();
+
 	}
 
-    public CxfEndpoint fmdEndPoint(CamelContext ctx) {
+    private Processor verifyProcessor () {
+    	return new Processor() {
+			@Override
+			public void process(Exchange exchange) throws Exception {
+				CamelContext ctx = exchange.getContext();
+				String store = ((FMDRequest)exchange.getProperty("originalRequest")).getStore().getId();
+				ctx.stopRoute("verifyBag");
+				ctx.removeRoute("verifyBag");
+				ctx.addRoutes(new RouteBuilder() {
+					@Override
+					public void configure() throws Exception {
+				    	from("direct:verifyBag")
+						.routeId("verifyBag")
+						.to("direct:createBag")
+						.bean("singlePackRequestBuilder", "getPacksFromBag")
+						.split(body(), new BaggregationStrategy())
+							.bean("singlePackRequestBuilder", "buildG110Request")
+							.setHeader("operationName", constant("G110Verify"))
+							.setHeader("operationNamespace", constant("urn:services.nmvs.eu:v2.0"))
+							.to(fmdEndPoint(ctx, store))
+						.end()
+						.to("bean:fmdResponseBuilder?method=buildBagResponse(${body}, ${property.originalRequest})")
+						.setHeader(Exchange.CONTENT_TYPE, constant("application/json"));
+						
+					}
+				});    	
+			}
+    	};
+    }
+    public CxfEndpoint fmdEndPoint(CamelContext ctx, String store) {
     	CxfEndpoint ep = new CxfEndpoint();
     	ep.setCamelContext(ctx);
     	ep.setAddress("https://ws-single-transactions-int-bp.nmvs.eu:8443/WS_SINGLE_TRANSACTIONS_V1/SinglePackServiceV20");
     	ep.setServiceClass(org.davisr.spring.camel.nmvs.ISinglePackServices.class);
     	ep.setWsdlURL("WS_SINGLE_PACK.wsdl");
-    	ep.setCxfEndpointConfigurer(fmdEndpointConfigurer());
+    	ep.setCxfEndpointConfigurer(fmdEndpointConfigurer(store));
     	return ep;
     }
     
-    private CxfEndpointConfigurer fmdEndpointConfigurer() {
+    private CxfEndpointConfigurer fmdEndpointConfigurer(String storeId) {
     	return new CxfEndpointConfigurer() {
 
 			@Override
@@ -178,7 +197,7 @@ public class BagRoutes extends RouteBuilder {
 
 			@Override
 			public void configureClient(Client client) {
-	            
+				System.out.println("configure called for store: " + storeId);
 				HTTPConduit conduit = (HTTPConduit) client.getConduit();
 				if (proxyServer != null && proxyServer.length() > 0) {
 					
