@@ -66,25 +66,18 @@ public class SinglePackResponseBuilder {
 		}
 	}
 	
-	public ArrayList<FMDResponse> buildBagVerifyResults(ArrayList responses, String requestOperation){
+	public ArrayList<FMDResponse> buildBagVerifyResults(ArrayList<?> responses, String requestOperation){
 		ArrayList<FMDResponse> fmdResponses = new ArrayList<FMDResponse>();
-		ArrayList<MessageContentsList> contents = (ArrayList<MessageContentsList>) responses;
-		
+
 		if (requestOperation.equals("verify")) {
-			contents.forEach(contentList -> {
-				G110Response g110Response = (G110Response) contentList.get(0);
-				fmdResponses.add(buildG110Response(g110Response));
-			});
+			ArrayList<G110Response> contents = (ArrayList<G110Response>) responses;
+			contents.forEach(r -> fmdResponses.add(buildG110Response(r)));
 		} else if (requestOperation.equals("dispense")) {
-			contents.forEach(contentList -> {
-				G120Response g120Response = (G120Response) contentList.get(0);
-				fmdResponses.add(buildG120Response(g120Response));
-			});
+			ArrayList<G120Response> contents = (ArrayList<G120Response>) responses;
+			contents.forEach(r -> fmdResponses.add(buildG120Response(r)));
 		} else if (requestOperation.equals("undo-dispense")) {
-			contents.forEach(contentList -> {
-				G121Response g121Response = (G121Response) contentList.get(0);
-				fmdResponses.add(buildG121Response(g121Response));
-			});
+			ArrayList<G121Response> contents = (ArrayList<G121Response>) responses;
+			contents.forEach(r -> fmdResponses.add(buildG121Response(r)));
 		}
 				
 		return fmdResponses;
