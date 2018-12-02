@@ -18,24 +18,14 @@ import org.davisr.spring.camel.fmd.keystore.KeyStoreInfo;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-@Component("nmvsEndpointHelper")
 public class NMVSStoreEndPointHelper {
 
-    @Value("${http.client.ssl.key-store}")
-    private String keyStore;
-    
     @Value("${http.proxy.server}")
     private String proxyServer;
     
     @Value("${http.proxy.port}")
     private Integer proxyPort;
     
-    @Value("${http.client.ssl.key-store.password}")
-    private String keyStorePassword;
-    
-    @Value("${http.client.ssl.key-store.type}")
-    private String keyStoreType;
-
 	private static final Map<String, KeyStoreInfo> keyStores;
 	static {
 		keyStores = new HashMap<String, KeyStoreInfo>();

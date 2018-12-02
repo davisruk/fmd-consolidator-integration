@@ -70,56 +70,47 @@ public class BagRoutes extends RouteBuilder {
     	
     	from("direct:dispenseBag")
 			.routeId("dispenseBag")
-			.to("direct:createBag")
-			.bean("singlePackRequestBuilder", "getPacksFromBag")
 			.split(body(), new BaggregationStrategy())
 				.bean("singlePackRequestBuilder", "buildG120Request")
 				.setHeader("operationName", constant("G120Dispense"))
 				.setHeader("operationNamespace", constant("urn:services.nmvs.eu:v2.0"))
 				.recipientList().method(NMVSStoreEndPointHelper.class, "routeTo(${property.originalRequest.store.id})")
-			.end()
-			.to("bean:fmdResponseBuilder?method=buildBagResponse(${body}, ${property.originalRequest})")
-			.setHeader(Exchange.CONTENT_TYPE, constant("application/json"));
+			.end();
 
     	from("direct:undoDispenseBag")
 			.routeId("undoDispenseBag")
-			.to("direct:createBag")
-			.bean("singlePackRequestBuilder", "getPacksFromBag")
 			.split(body(), new BaggregationStrategy())
 				.bean("singlePackRequestBuilder", "buildG121Request")
 				.setHeader("operationName", constant("G121UndoDispense"))
 				.setHeader("operationNamespace", constant("urn:services.nmvs.eu:v2.0"))
 				.recipientList().method(NMVSStoreEndPointHelper.class, "routeTo(${property.originalRequest.store.id})")
-			.end()
-			.to("bean:fmdResponseBuilder?method=buildBagResponse(${body}, ${property.originalRequest})")
-			.setHeader(Exchange.CONTENT_TYPE, constant("application/json"));
-
+			.end();
+    	
     	from("direct:verifyBag")
 		.routeId("verifyBag")
-		.to("direct:createBag")
-		.bean("singlePackRequestBuilder", "getPacksFromBag")
 		.split(body(), new BaggregationStrategy())
 			.bean("singlePackRequestBuilder", "buildG110Request")
 			.setHeader("operationName", constant("G110Verify"))
 			.setHeader("operationNamespace", constant("urn:services.nmvs.eu:v2.0"))
 			.recipientList().method(NMVSStoreEndPointHelper.class, "routeTo(${property.originalRequest.store.id})")
-		.end()
-		.to("bean:fmdResponseBuilder?method=buildBagResponse(${body}, ${property.originalRequest})")
-		.setHeader(Exchange.CONTENT_TYPE, constant("application/json"));
+		.end();
 
     	from("direct:fmdRequest")
 			.routeId("fmdRequest")
 			.setProperty("originalRequest", body())
+			.bean("singlePackRequestBuilder", "getBag")
+			.to("direct:createBag")
+			.bean("singlePackRequestBuilder", "getPacksFromBag")
 			.choice()
-			.when().method("singlePackRequestBuilder", "isVerifyRequest")
-				.bean("singlePackRequestBuilder", "getBag")
-				.to("direct:verifyBag")
-			.when().method("singlePackRequestBuilder", "isDispenseRequest")
-				.bean("singlePackRequestBuilder", "getBag")
-				.to("direct:dispenseBag")
-			.when().method("singlePackRequestBuilder", "isUndoDispenseRequest")
-				.bean("singlePackRequestBuilder", "getBag")
-				.to("direct:undoDispenseBag")
-			.end();
+				.when().method("singlePackRequestBuilder", "isVerifyRequest(${property.originalRequest})")
+					.to("direct:verifyBag")
+				.when().method("singlePackRequestBuilder", "isDispenseRequest(${property.originalRequest})")
+					.to("direct:dispenseBag")
+				.when().method("singlePackRequestBuilder", "isUndoDispenseRequest(${property.originalRequest})")
+					.to("direct:undoDispenseBag")
+				.end()
+			.to("bean:fmdResponseBuilder?method=buildBagResponse(${body}, ${property.originalRequest})")
+			.setHeader(Exchange.CONTENT_TYPE, constant("application/json"));
+
 	}
 }

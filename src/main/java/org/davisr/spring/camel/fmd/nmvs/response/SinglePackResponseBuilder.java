@@ -68,16 +68,13 @@ public class SinglePackResponseBuilder {
 	
 	public ArrayList<FMDResponse> buildBagVerifyResults(ArrayList<?> responses, String requestOperation){
 		ArrayList<FMDResponse> fmdResponses = new ArrayList<FMDResponse>();
-
+		ArrayList<MessageContentsList> contents = (ArrayList<MessageContentsList>) responses;
 		if (requestOperation.equals("verify")) {
-			ArrayList<G110Response> contents = (ArrayList<G110Response>) responses;
-			contents.forEach(r -> fmdResponses.add(buildG110Response(r)));
+			contents.forEach(l -> fmdResponses.add(buildG110Response((G110Response)l.get(0))));
 		} else if (requestOperation.equals("dispense")) {
-			ArrayList<G120Response> contents = (ArrayList<G120Response>) responses;
-			contents.forEach(r -> fmdResponses.add(buildG120Response(r)));
+			contents.forEach(l -> fmdResponses.add(buildG120Response((G120Response)l.get(0))));
 		} else if (requestOperation.equals("undo-dispense")) {
-			ArrayList<G121Response> contents = (ArrayList<G121Response>) responses;
-			contents.forEach(r -> fmdResponses.add(buildG121Response(r)));
+			contents.forEach(l -> fmdResponses.add(buildG121Response((G121Response)l.get(0))));
 		}
 				
 		return fmdResponses;
