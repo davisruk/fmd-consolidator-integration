@@ -6,7 +6,6 @@ import java.util.Map;
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.cxf.CxfEndpoint;
 import org.apache.camel.component.cxf.CxfEndpointConfigurer;
-import org.apache.camel.impl.ProducerCache;
 import org.apache.camel.util.jsse.KeyManagersParameters;
 import org.apache.camel.util.jsse.KeyStoreParameters;
 import org.apache.cxf.configuration.jsse.TLSClientParameters;
@@ -17,6 +16,7 @@ import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 import org.davisr.spring.camel.fmd.keystore.KeyStoreInfo;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 @Component
 public class NMVSStoreEndPointHelper {
