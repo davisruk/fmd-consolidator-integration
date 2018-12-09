@@ -4,6 +4,7 @@ import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.rest.RestBindingMode;
 import org.davisr.spring.camel.fmd.nmvs.request.FMDRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +17,9 @@ public class BagRoutes extends RouteBuilder {
     @Value("${server.address}")
     String host;
 
+    @Autowired
+    NMVSStoreEndPointHelper endpointConfig;
+    
     @Override
 	public void configure() throws Exception {
     	restConfiguration()
@@ -45,7 +49,7 @@ public class BagRoutes extends RouteBuilder {
 	    	.get()
 				.to("direct:getAllPacks");				
 
-    	new NMVSStoreEndPointHelper().setupEndpoints(getContext());
+    	endpointConfig.setupEndpoints(getContext());
     	
     	from("direct:createBag")
     		.routeId("createBag")

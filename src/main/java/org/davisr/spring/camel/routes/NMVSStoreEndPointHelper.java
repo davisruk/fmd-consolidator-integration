@@ -18,6 +18,7 @@ import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 import org.davisr.spring.camel.fmd.keystore.KeyStoreInfo;
 import org.springframework.beans.factory.annotation.Value;
 
+@Component
 public class NMVSStoreEndPointHelper {
 
     @Value("${http.proxy.server}")
@@ -26,14 +27,15 @@ public class NMVSStoreEndPointHelper {
     @Value("${http.proxy.port}")
     private Integer proxyPort;
     
-	private static final Map<String, KeyStoreInfo> keyStores;
-	static {
+	private Map<String, KeyStoreInfo> keyStores;
+
+	public NMVSStoreEndPointHelper () {
 		keyStores = new HashMap<String, KeyStoreInfo>();
 		keyStores.put("123", KeyStoreInfo.builder().id(123).cacheKey("store:123").keystoreName("cert/DAVI1001.p12").keystorePassword("wmD6xw1u").keyStoreType("PKCS12").build());
 		keyStores.put("456", KeyStoreInfo.builder().id(123).cacheKey("store:456").keystoreName("cert/teststore01.p12").keystorePassword("wmD6xw1u").keyStoreType("PKCS12").build());
 	}
-	
-    public void setupEndpoints(CamelContext ctx) {
+
+	public void setupEndpoints(CamelContext ctx) {
 		keyStores.forEach((key, value) -> {
 			try {
 				ctx.addEndpoint("cfx:fmd:" + key, fmdEndPoint(ctx, value));
