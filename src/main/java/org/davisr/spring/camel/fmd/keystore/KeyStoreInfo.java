@@ -14,5 +14,6 @@ public class KeyStoreInfo {
 	private String keystorePassword;
 	private String keystoreName;
 	private String keyStoreType;
+	private String cacheKey;
 	
 }

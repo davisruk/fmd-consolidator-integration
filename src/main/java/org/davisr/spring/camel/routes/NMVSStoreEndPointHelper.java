@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.cxf.CxfEndpoint;
 import org.apache.camel.component.cxf.CxfEndpointConfigurer;
+import org.apache.camel.impl.ProducerCache;
 import org.apache.camel.util.jsse.KeyManagersParameters;
 import org.apache.camel.util.jsse.KeyStoreParameters;
 import org.apache.cxf.configuration.jsse.TLSClientParameters;
@@ -16,7 +17,6 @@ import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 import org.davisr.spring.camel.fmd.keystore.KeyStoreInfo;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 
 public class NMVSStoreEndPointHelper {
 
@@ -29,8 +29,8 @@ public class NMVSStoreEndPointHelper {
 	private static final Map<String, KeyStoreInfo> keyStores;
 	static {
 		keyStores = new HashMap<String, KeyStoreInfo>();
-		keyStores.put("123", KeyStoreInfo.builder().id(123).keystoreName("cert/DAVI1001.p12").keystorePassword("wmD6xw1u").keyStoreType("PKCS12").build());
-		keyStores.put("456", KeyStoreInfo.builder().id(123).keystoreName("cert/DAVI1001.p12").keystorePassword("wmD6xw1u").keyStoreType("PKCS12").build());
+		keyStores.put("123", KeyStoreInfo.builder().id(123).cacheKey("store:123").keystoreName("cert/DAVI1001.p12").keystorePassword("wmD6xw1u").keyStoreType("PKCS12").build());
+		keyStores.put("456", KeyStoreInfo.builder().id(123).cacheKey("store:456").keystoreName("cert/teststore01.p12").keystorePassword("wmD6xw1u").keyStoreType("PKCS12").build());
 	}
 	
     public void setupEndpoints(CamelContext ctx) {
@@ -46,6 +46,7 @@ public class NMVSStoreEndPointHelper {
     public CxfEndpoint fmdEndPoint(CamelContext ctx, KeyStoreInfo keyInfo) {
     	CxfEndpoint ep = getBasicEndpoint(ctx);
     	ep.setCxfEndpointConfigurer(fmdEndpointConfigurer(keyInfo));
+    	ep.setProducerCacheKey(keyInfo.getCacheKey());
     	return ep;
     }
     

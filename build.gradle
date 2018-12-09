@@ -1,9 +1,10 @@
 buildscript {
 	ext {
 		springBootVersion = '2.1.0.RELEASE'
-		camelVersion = '2.22.2'
+		camelVersion = '2.24.0-SNAPSHOT'
 	}
 	repositories {
+		//mavenLocal()
 		mavenCentral()
 		
 		// palantir docker plugin not in spring or maven repos
@@ -13,6 +14,12 @@ buildscript {
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+		//classpath("org.apache.camel:camel-spring-boot-starter:${camelVersion}")
+		//classpath("org.apache.camel:camel-swagger-java-starter:${camelVersion}")
+		//classpath("org.apache.camel:camel-servlet-starter:${camelVersion}")
+		//classpath("org.apache.camel:camel-jackson-starter:${camelVersion}")
+		//classpath("org.apache.camel:camel-cxf:${camelVersion}")
+		//classpath("org.apache.camel:camel-jsonpath:${camelVersion}")
 		classpath("gradle.plugin.com.palantir.gradle.docker:gradle-docker:0.20.1")
 		classpath("no.nils:wsdl2java:0.10")
 	}
@@ -32,6 +39,7 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
 
 repositories {
+	mavenLocal()
 	mavenCentral()
 }
 
