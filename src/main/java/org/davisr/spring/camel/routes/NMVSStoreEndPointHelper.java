@@ -35,11 +35,13 @@ public class NMVSStoreEndPointHelper {
     @Autowired
 	private StoreProperties storeProps;
     
-	public void setupEndpoints(CamelContext ctx) {
+	private static String endpointPrefix = "cfx:fmd";
+	
+    public void setupEndpoints(CamelContext ctx) {
 
 		storeProps.getKeyStoreInfo().forEach(value -> {
 			try {
-				ctx.addEndpoint("cfx:fmd:" + value.getId(), fmdEndPoint(ctx, value));
+				ctx.addEndpoint(endpointPrefix + value.getId(), fmdEndPoint(ctx, value));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -54,7 +56,7 @@ public class NMVSStoreEndPointHelper {
     }
     
     public String[] routeTo(String store) {
-    	return new String[] {"cfx:fmd:" + store};
+    	return new String[] {endpointPrefix + store};
     }
     
     private CxfEndpoint getBasicEndpoint (CamelContext ctx) {
