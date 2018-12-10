@@ -14,6 +14,5 @@ import lombok.Data;
 @ConfigurationProperties(prefix="stores")
 @Data
 public class StoreProperties {
-	//private Map<String, KeyStoreInfo> keyStoreInfo;
 	private List<KeyStoreInfo> keyStoreInfo;
 }
