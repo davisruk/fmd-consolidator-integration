@@ -1,8 +1,5 @@
 package org.davisr.spring.camel.routes;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.cxf.CxfEndpoint;
 import org.apache.camel.component.cxf.CxfEndpointConfigurer;
@@ -14,7 +11,9 @@ import org.apache.cxf.endpoint.Server;
 import org.apache.cxf.frontend.AbstractWSDLBasedEndpointFactory;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
+import org.davisr.spring.camel.StoreProperties;
 import org.davisr.spring.camel.fmd.keystore.KeyStoreInfo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -27,18 +26,20 @@ public class NMVSStoreEndPointHelper {
     @Value("${http.proxy.port}")
     private Integer proxyPort;
     
-	private Map<String, KeyStoreInfo> keyStores;
-
-	public NMVSStoreEndPointHelper () {
-		keyStores = new HashMap<String, KeyStoreInfo>();
-		keyStores.put("123", KeyStoreInfo.builder().id(123).cacheKey("store:123").keystoreName("cert/DAVI1001.p12").keystorePassword("wmD6xw1u").keyStoreType("PKCS12").build());
-		keyStores.put("456", KeyStoreInfo.builder().id(123).cacheKey("store:456").keystoreName("cert/teststore01.p12").keystorePassword("password").keyStoreType("PKCS12").build());
-	}
-
+    @Value("${nmvs.address}")
+    private String nmvsAddress;
+    
+    @Value("${nmvs.wsdl.url}")
+    private String nmvsWsdlUrl;
+    
+    @Autowired
+	private StoreProperties storeProps;
+    
 	public void setupEndpoints(CamelContext ctx) {
-		keyStores.forEach((key, value) -> {
+
+		storeProps.getKeyStoreInfo().forEach(value -> {
 			try {
-				ctx.addEndpoint("cfx:fmd:" + key, fmdEndPoint(ctx, value));
+				ctx.addEndpoint("cfx:fmd:" + value.getId(), fmdEndPoint(ctx, value));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -59,11 +60,10 @@ public class NMVSStoreEndPointHelper {
     private CxfEndpoint getBasicEndpoint (CamelContext ctx) {
     	CxfEndpoint ep = new CxfEndpoint();
     	ep.setCamelContext(ctx);
-    	ep.setAddress("https://ws-single-transactions-int-bp.nmvs.eu:8443/WS_SINGLE_TRANSACTIONS_V1/SinglePackServiceV20");
+    	ep.setAddress(nmvsAddress);
     	ep.setServiceClass(org.davisr.spring.camel.nmvs.ISinglePackServices.class);
-    	ep.setWsdlURL("WS_SINGLE_PACK.wsdl");
+    	ep.setWsdlURL(nmvsWsdlUrl);
     	return ep;
-    	
     }
     
     private CxfEndpointConfigurer fmdEndpointConfigurer(KeyStoreInfo keyInfo) {
