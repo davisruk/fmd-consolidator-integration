@@ -32,7 +32,7 @@ public class NMVSStoreEndPointHelper {
 	public NMVSStoreEndPointHelper () {
 		keyStores = new HashMap<String, KeyStoreInfo>();
 		keyStores.put("123", KeyStoreInfo.builder().id(123).cacheKey("store:123").keystoreName("cert/DAVI1001.p12").keystorePassword("wmD6xw1u").keyStoreType("PKCS12").build());
-		keyStores.put("456", KeyStoreInfo.builder().id(123).cacheKey("store:456").keystoreName("cert/teststore01.p12").keystorePassword("wmD6xw1u").keyStoreType("PKCS12").build());
+		keyStores.put("456", KeyStoreInfo.builder().id(123).cacheKey("store:456").keystoreName("cert/teststore01.p12").keystorePassword("password").keyStoreType("PKCS12").build());
 	}
 
 	public void setupEndpoints(CamelContext ctx) {
