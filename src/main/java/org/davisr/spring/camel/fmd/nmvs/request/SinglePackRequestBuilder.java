@@ -10,6 +10,7 @@ import org.davisr.spring.camel.nmvs.CatalogProductSchemeType;
 import org.davisr.spring.camel.nmvs.G110Request;
 import org.davisr.spring.camel.nmvs.G120Request;
 import org.davisr.spring.camel.nmvs.G121Request;
+import org.davisr.spring.camel.nmvs.G180Request;
 import org.davisr.spring.camel.nmvs.ProductIdentifierType;
 import org.davisr.spring.camel.nmvs.RequestAuthHeaderDataType;
 import org.davisr.spring.camel.nmvs.RequestDataType;
@@ -19,10 +20,16 @@ import org.davisr.spring.camel.nmvs.RequestProductType;
 import org.davisr.spring.camel.nmvs.RequestTransactionHeaderDataType;
 import org.davisr.spring.camel.nmvs.RequestUndoSingleDataType;
 import org.davisr.spring.camel.nmvs.UserSoftwareType;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component("singlePackRequestBuilder")
 public class SinglePackRequestBuilder {
+
+    @Value("${nmvs.user}")
+    String nmvsUser;
+    @Value("${nmvs.password}")
+    String nmvsPassword;
 
 	public boolean isVerifyRequest (FMDRequest request) {
 		return request.getOperation().equals("verify");
@@ -34,6 +41,10 @@ public class SinglePackRequestBuilder {
 
 	public boolean isUndoDispenseRequest (FMDRequest request) {
 		return request.getOperation().equals("undo-dispense");
+	}
+
+	public boolean isStolenRequest (FMDRequest request) {
+		return request.getOperation().equals("stolen");
 	}
 
 	public G110Request buildG110Request (Pack p) {
@@ -57,6 +68,16 @@ public class SinglePackRequestBuilder {
 		return r;
 	}
 
+	// NOTE G181 Undo Stolen is no longer allowed by NMVS
+	// You will not be able to undo a pack whose state
+	// has been set to STOLEN
+	public G180Request buildG180Request (Pack p) {
+		G180Request r = new G180Request();
+		r.setHeader(buildHeader());
+		r.setBody(buildBody(p));
+		return r;
+	}
+
 	public Bag getBag (FMDRequest request) {
 		return request.getBag();
 	}
@@ -76,8 +97,8 @@ public class SinglePackRequestBuilder {
 	private RequestAuthHeaderDataType buildAuthHeader () {
 		RequestAuthHeaderDataType h = new RequestAuthHeaderDataType();
 		h.setClientLoginId("SWS");
-		h.setPassword("Gu3$$Wh0");
-		h.setUserId("DAVI1001");
+		h.setPassword(nmvsPassword);
+		h.setUserId(nmvsUser);
 		return h;
 	}
 	

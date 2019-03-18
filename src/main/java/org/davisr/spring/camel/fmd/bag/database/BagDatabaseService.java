@@ -24,6 +24,11 @@ public class BagDatabaseService {
 	public Bag saveBag (Bag bag) {
 		bag.getPacks().forEach(pack -> pack.setBag(bag));
 		Bag repoBag = bagRepo.findByLabelCode(bag.getLabelCode());
+		// this is wrong!!! if bag exists we need to compare it
+		// with the repo version and add / remove packs
+		// based on the bag in the request
+		// easier to leave this up to end system and use update / create
+		// mechanism instead - create should return error if label exists.
 		if (repoBag != null) {
 			return repoBag;
 		}

@@ -13,6 +13,8 @@ import org.davisr.spring.camel.fmd.nmvs.request.FMDRequest;
 import org.davisr.spring.camel.nmvs.G110Response;
 import org.davisr.spring.camel.nmvs.G120Response;
 import org.davisr.spring.camel.nmvs.G121Response;
+import org.davisr.spring.camel.nmvs.G180Response;
+import org.davisr.spring.camel.nmvs.G181Response;
 import org.davisr.spring.camel.nmvs.O1BodyType;
 import org.davisr.spring.camel.nmvs.ResponsePackType;
 import org.davisr.spring.camel.nmvs.ResponseProductType;
@@ -31,6 +33,10 @@ public class SinglePackResponseBuilder {
 	}
 
 	public FMDResponse buildG121Response (G121Response response) {
+		return buildFMDResponse(response.getBody());
+	}
+
+	public FMDResponse buildG180Response (G180Response response) {
 		return buildFMDResponse(response.getBody());
 	}
 
@@ -75,8 +81,10 @@ public class SinglePackResponseBuilder {
 			contents.forEach(l -> fmdResponses.add(buildG120Response((G120Response)l.get(0))));
 		} else if (requestOperation.equals("undo-dispense")) {
 			contents.forEach(l -> fmdResponses.add(buildG121Response((G121Response)l.get(0))));
+		} else if (requestOperation.equals("stolen")) {
+			contents.forEach(l -> fmdResponses.add(buildG180Response((G180Response)l.get(0))));
 		}
-				
+		
 		return fmdResponses;
 	}
 

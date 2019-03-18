@@ -99,17 +99,28 @@ public class BagRoutes extends RouteBuilder {
 			.recipientList().method(NMVSStoreEndPointHelper.class, "routeTo(${property.originalRequest.store.id})")
 		.end();
 
+    	from("direct:stolenBag")
+		.routeId("stolenBag")
+		.split(body(), new BaggregationStrategy())
+			.bean("singlePackRequestBuilder", "buildG180Request")
+			.setHeader("operationName", constant("G180Stolen"))
+			.setHeader("operationNamespace", constant("urn:services.nmvs.eu:v2.0"))
+			.recipientList().method(NMVSStoreEndPointHelper.class, "routeTo(${property.originalRequest.store.id})")
+		.end();
+
     	from("direct:fmdRequest")
 			.routeId("fmdRequest")
 			.setProperty("originalRequest", body())
 			.bean("singlePackRequestBuilder", "getBag")
-			.to("direct:createBag")
+			//.to("direct:createBag") -- error with bag save, need to verify that label is unique
 			.bean("singlePackRequestBuilder", "getPacksFromBag")
 			.choice()
 				.when().method("singlePackRequestBuilder", "isVerifyRequest(${property.originalRequest})")
 					.to("direct:verifyBag")
 				.when().method("singlePackRequestBuilder", "isDispenseRequest(${property.originalRequest})")
 					.to("direct:dispenseBag")
+				.when().method("singlePackRequestBuilder", "isStolenRequest(${property.originalRequest})")
+					.to("direct:stolenBag")
 				.when().method("singlePackRequestBuilder", "isUndoDispenseRequest(${property.originalRequest})")
 					.to("direct:undoDispenseBag")
 				.end()
