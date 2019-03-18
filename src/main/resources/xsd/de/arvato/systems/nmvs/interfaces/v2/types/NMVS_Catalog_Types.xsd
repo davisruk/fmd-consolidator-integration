@@ -100,11 +100,11 @@
 			<enumeration value="NMVS_FE_LOT_07">
 			<annotation> <documentation>The expiry date contains incorrect date value</documentation></annotation> </enumeration>
 			<enumeration value="NMVS_FE_PKI_01">
-            <annotation> <documentation> Zertifikat hat die maximale Gültigkeitsdauer überschritten.</documentation></annotation> </enumeration>
+            <annotation> <documentation> Certificate has exceeded the maximum validity period.</documentation></annotation> </enumeration>
 			<enumeration value="NMVS_FE_PKI_06">
             <annotation> <documentation>There is no valid certificate for this user.</documentation></annotation> </enumeration>	
             <enumeration value="NMVS_FE_PKI_07">
-            <annotation> <documentation> Für den Benutzer liegt kein neues Zertifikat vor.</documentation></annotation> </enumeration>				
+            <annotation> <documentation> There is no new certificate for the user.</documentation></annotation> </enumeration>				
 			<enumeration value="NMVS_FE_TX_01">
 			<annotation> <documentation>The entered transaction number does not match the transaction number of dispense.</documentation></annotation> </enumeration>
 			<enumeration value="NMVS_FE_TX_02">

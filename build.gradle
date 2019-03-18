@@ -76,9 +76,9 @@ dependencies {
 	implementation("org.apache.camel:camel-jackson-starter:${camelVersion}")
 	implementation("org.apache.camel:camel-cxf:${camelVersion}")
 	implementation("org.apache.camel:camel-jsonpath:${camelVersion}")
+	implementation('com.h2database:h2')	
 	compileOnly('org.projectlombok:lombok:1.18.4')
 	providedRuntime('org.springframework.boot:spring-boot-starter-tomcat')
-	providedRuntime('com.h2database:h2')
 	testImplementation('org.springframework.boot:spring-boot-starter-test')
 }
 
